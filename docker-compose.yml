@@ -1,17 +1,26 @@
 version: "3.8"
 services:
-  frontend:
+  rproxy:
     restart: always
-    build: frontend
-    depends_on:
-      - backend
+    image: nginx:1.19.10-alpine
+    volumes:
+      - ./rproxy.conf:/etc/nginx/nginx.conf
     ports:
-      - 8080:8080
+      - 80:80
     stdin_open: true
     networks:
       - frontend-backend
+    depends_on:
+      - frontend
+      - backend
+  
+  frontend:
+    restart: always
+    build: frontend
+    networks:
+      - frontend-backend
     environment:
-      PORT: 8080
+      PORT: 80
     #volumes:
     #  - ./frontend:/usr/src/app
     #  - /usr/src/app/node_modules
@@ -24,11 +33,9 @@ services:
     networks:
       - backend-database
       - frontend-backend
-    #ports:
-    #  - 8080:8080 # TODO: remove once we have the frontend
     environment:
-      DB_CONNECTION: mongodb://root:example@database:27017/aws
-      APP_PORT: 8080
+      PORT: 80
+      DB_CONNECTION: mongodb://database:27017/aws
     #volumes:
     #  - ./backend:/usr/src/app
     #  - /usr/src/app/node_modules
@@ -38,9 +45,6 @@ services:
     image: mongo:4.4.4
     networks:
       - backend-database
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
     #volumes:
     #  - ./data:/data/db
 networks:
