@@ -1,0 +1,9 @@
+node_modules
+Dockerfile
+*.md
+*.log
+build
+.dockerignore
+**/.git
+**/.DS_Store
+**/node_modules

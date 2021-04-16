@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  frontend:
+    restart: always
+    build: frontend
+    depends_on:
+      - backend
+    ports:
+      - 8080:8080
+    stdin_open: true
+    networks:
+      - frontend-backend
+    environment:
+      PORT: 8080
+    #volumes:
+    #  - ./frontend:/usr/src/app
+    #  - /usr/src/app/node_modules
+
+  backend:
+    restart: always
+    build: backend
+    depends_on:
+      - database
+    networks:
+      - backend-database
+      - frontend-backend
+    #ports:
+    #  - 8080:8080 # TODO: remove once we have the frontend
+    environment:
+      DB_CONNECTION: mongodb://root:example@database:27017/aws
+      APP_PORT: 8080
+    #volumes:
+    #  - ./backend:/usr/src/app
+    #  - /usr/src/app/node_modules
+
+  database:
+    restart: always
+    image: mongo:4.4.4
+    networks:
+      - backend-database
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    #volumes:
+    #  - ./data:/data/db
+networks:
+  frontend-backend:
+  backend-database:
