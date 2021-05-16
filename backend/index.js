@@ -9,18 +9,18 @@ app.use(routes)
 
 const PORT = process.env.PORT || 3001
 
-
-mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser:true, useUnifiedTopology:true})
-mongoose.set('returnOriginal', false) // update queries will return the modified object instead of the original one
-
-
 process.on('unhandledRejection', (error) => {
   console.log('unhandledRejection')
   console.log(error)
 })
 
+console.log(process.env.NODE_ENV)
 
+//mongoose.set('returnOriginal', false) // update queries will return the modified object instead of the original one
+//await mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser:true, useUnifiedTopology:true})
 
 app.listen(PORT,() => {
   console.log('listening on http://localhost:' + PORT)
 })
+
+module.exports = app

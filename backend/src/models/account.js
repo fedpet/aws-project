@@ -13,6 +13,8 @@ const accountSchema = new Schema({
 accountSchema.methods.toJSON = function() {
     var obj = this.toObject();
     delete obj.password;
+    delete obj._id;
+    delete obj.__v;
     return obj;
 }
 

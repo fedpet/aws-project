@@ -36,9 +36,8 @@ services:
     environment:
       PORT: 80
       DB_CONNECTION: mongodb://database:27017/aws
-    #volumes:
-    #  - ./backend:/usr/src/app
-    #  - /usr/src/app/node_modules
+    volumes:
+      - ./backend:/usr/src/app # allow live-debugging
 
   database:
     restart: always
