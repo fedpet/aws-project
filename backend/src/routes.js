@@ -15,7 +15,7 @@ router.route('/user/:user/notifications')
     .get(notification.getNotifications)
     .post(notification.createNotification);
 
-router.route('/user/user/notifications/:notification_id')
+router.route('/user/:user/notifications/:notification_id')
     .get(notification.getNotificationById)
     .post(notification.markAsRead);
 

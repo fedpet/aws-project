@@ -11,7 +11,7 @@ exports.getNotifications = function(req, res) {
         }
         res.json({
             status: "Success",
-            message: "Notification retrived successfully",
+            message: "Notification retrieved successfully",
             data: notifications
         });
     });
@@ -41,7 +41,7 @@ exports.createNotification = function(req, res) {
             res.json(error);
         }
         res.json({
-            message: "New notification createx",
+            message: "New notification created",
             data: notification
         });
     });
@@ -59,14 +59,14 @@ exports.markAsRead = function(req, res) {
                 res.json(err);
             }
             res.json({
-                message: 'Motification mark as read',
+                message: 'Notification mark as read',
                 data: notification
             });
         });
     });
 }
 
-//Handle get notifications beetween two dates
+//Handle get notifications between two dates
 exports.getNotificationByDate = function(req, res) {
     let start = moment(new Date(req.params.start_date));
     let end = moment(new Date(req.params.end_date));
