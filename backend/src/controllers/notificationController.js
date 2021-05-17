@@ -4,14 +4,9 @@ const Notification = require('../models/notificationModel')
 exports.getNotifications = function(req, res) {
     Notification.find({ user: req.params.user }, function(err, notifications) {
         if (err) {
-            res.json({
-                status: "error",
-                message: err,
-            })
+            res.status(500).send(err);
         }
-        res.json({
-            status: "Success",
-            message: "Notification retrieved successfully",
+        res.status(200).json({
             data: notifications
         });
     });
@@ -21,9 +16,9 @@ exports.getNotifications = function(req, res) {
 exports.getNotificationById = function(req, res) {
     Notification.findById(req.params.notification_id, function(err, notification) {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         }
-        res.json({
+        res.status(200).json({
             data: notification
         });
     });
@@ -38,10 +33,9 @@ exports.createNotification = function(req, res) {
 
     nt.save(function(err) {
         if (err) {
-            res.json(error);
+            res.status(500).send(error);
         }
-        res.json({
-            message: "New notification created",
+        res.status(201).json({
             data: notification
         });
     });
@@ -51,15 +45,14 @@ exports.createNotification = function(req, res) {
 exports.markAsRead = function(req, res) {
     Notification.findById(req.params.notification_id, function(err, notification) {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         }
         notification.status = true;
         notification.save(function(err) {
             if (err) {
-                res.json(err);
+                res.status(500).json(err);
             }
-            res.json({
-                message: 'Notification mark as read',
+            res.status(200).json({
                 data: notification
             });
         });
@@ -74,9 +67,9 @@ exports.getNotificationByDate = function(req, res) {
     let query = { user: req.params.user, date: { '$gte': start, '$lte': end } };
     Notification.find(query, function(err, notification) {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         }
-        res.json({
+        res.status(200).json({
             data: notification
         })
     });
