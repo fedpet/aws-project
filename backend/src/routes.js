@@ -19,7 +19,7 @@ router.route('/user/:user/notifications/:notification_id')
     .get(notification.getNotificationById)
     .post(notification.markAsRead);
 
-router.get('/user/:user/notifications/:start_data/:end_data');
+router.get('/user/:user/notifications/:start_date/:end_date');
 
 // handle all 404 requests
 router.use(function(req, res) {
