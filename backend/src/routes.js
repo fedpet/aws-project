@@ -11,15 +11,13 @@ router.post('/login', account.login)
 router.get('/account', account.account)
 
 //Notifications system
-router.route('/user/:user/notifications')
-    .get(notification.getNotifications)
-    .post(notification.createNotification);
+router.get('/user/:user/notifications', notification.getNotifications)
 
 router.route('/user/:user/notifications/:notification_id')
     .get(notification.getNotificationById)
-    .post(notification.markAsRead);
+    .post(notification.markAsRead)
 
-router.get('/user/:user/notifications/:start_date/:end_date');
+router.get('/user/:user/notifications/:start_date/:end_date')
 
 // handle all 404 requests
 router.use(function(req, res) {

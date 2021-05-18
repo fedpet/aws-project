@@ -4,7 +4,7 @@ const Notification = require('../models/notificationModel')
 exports.getNotifications = function(req, res) {
     Notification.find({ user: req.params.user }, function(err, notifications) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).json(err);
         }
         res.status(200).json({
             data: notifications
@@ -16,7 +16,7 @@ exports.getNotifications = function(req, res) {
 exports.getNotificationById = function(req, res) {
     Notification.findById(req.params.notification_id, function(err, notification) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).json(err);
         }
         res.status(200).json({
             data: notification
@@ -26,14 +26,14 @@ exports.getNotificationById = function(req, res) {
 
 //Handle create new notification
 exports.createNotification = function(req, res) {
-    var nt = new notification();
+    var nt = new Notification();
     nt.type = req.body.type;
     nt.quantity = req.body.type;
     nt.user = req.body.user;
 
     nt.save(function(err) {
         if (err) {
-            res.status(500).send(error);
+            res.status(500).json(error);
         }
         res.status(201).json({
             data: notification
@@ -45,7 +45,7 @@ exports.createNotification = function(req, res) {
 exports.markAsRead = function(req, res) {
     Notification.findById(req.params.notification_id, function(err, notification) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).json(err);
         }
         notification.status = true;
         notification.save(function(err) {
@@ -67,7 +67,7 @@ exports.getNotificationByDate = function(req, res) {
     let query = { user: req.params.user, date: { '$gte': start, '$lte': end } };
     Notification.find(query, function(err, notification) {
         if (err) {
-            res.status(500).send(err);
+            res.status(500).json(err);
         }
         res.status(200).json({
             data: notification
