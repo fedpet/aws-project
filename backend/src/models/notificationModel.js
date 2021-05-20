@@ -15,7 +15,7 @@ const notificationSchema = new Schema({
         required: true
     },
     quantity: {
-        type: number,
+        type: Number,
         required: true
     },
     user: String

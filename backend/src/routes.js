@@ -3,7 +3,7 @@ const router = express.Router()
 const { auth, guard, createToken } = require('./auth')
 
 const account = require('./controllers/login')(createToken)
-const notification = require('../controllers/notificationController');
+const notification = require('./controllers/notificationController');
 
 router.use(auth.unless({ path: ['/login'] }))
 
@@ -24,5 +24,4 @@ router.use(function(req, res) {
     res.status(404).json({});
 })
 
-module.exports = router
 module.exports = router

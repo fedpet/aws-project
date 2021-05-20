@@ -24,23 +24,6 @@ exports.getNotificationById = function(req, res) {
     });
 }
 
-//Handle create new notification
-exports.createNotification = function(req, res) {
-    var nt = new Notification();
-    nt.type = req.body.type;
-    nt.quantity = req.body.type;
-    nt.user = req.body.user;
-
-    nt.save(function(err) {
-        if (err) {
-            res.status(500).json(error);
-        }
-        res.status(201).json({
-            data: notification
-        });
-    });
-}
-
 //Handle mark notification as read
 exports.markAsRead = function(req, res) {
     Notification.findById(req.params.notification_id, function(err, notification) {
