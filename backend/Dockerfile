@@ -11,4 +11,4 @@ RUN npm install --production
 RUN apk --no-cache add curl
 
 # Run our app.
-CMD ["node", "index.js"]
+CMD ["npm", "run", "prod"]

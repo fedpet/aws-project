@@ -35,11 +35,8 @@ exports.markAsRead = function(req, res) {
             if (err) {
                 res.status(500).json(err);
             }
-            res.status(200).json({
-                data: notification
-            });
         });
-    });
+    }
 }
 
 //Handle get notifications between two dates
@@ -53,7 +50,7 @@ exports.getNotificationByDate = function(req, res) {
             res.status(500).json(err);
         }
         res.status(200).json({
-            data: notification
+             data: notification
         })
     });
 }

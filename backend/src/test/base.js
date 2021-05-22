@@ -8,7 +8,12 @@ module.exports = {
         beforeEach(done) {
             const db = new MongoMemoryServer()
             db.getUri()
-                .then(uri => mongoose.connect(uri, {useNewUrlParser:true, useUnifiedTopology:true}))
+                .then(uri => mongoose.connect(uri, {
+                    useNewUrlParser:true,
+                    useUnifiedTopology:true,
+                    useCreateIndex: true,
+                    returnOriginal: false
+                }))
                 .finally(done)
         },
         afterEach(done) {
