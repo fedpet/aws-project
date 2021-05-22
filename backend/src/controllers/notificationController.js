@@ -30,7 +30,7 @@ exports.markAsRead = function(req, res) {
         if (err) {
             res.status(500).json(err);
         }
-        notification.status = true;
+        notification.read = true;
         notification.save(function(err) {
             if (err) {
                 res.status(500).json(err);
