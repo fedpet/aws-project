@@ -1,14 +1,24 @@
 const express = require('express')
 const router = express.Router()
 const { auth, guard, createToken } = require('./auth')
+const { CastError } = require('mongoose')
 
 const account = require('./controllers/login')(createToken)
+const waste = require('./controllers/waste')
 
-router.use(auth.unless({path: ['/login']}))
+router.use( auth.unless({ path: ['/login', '/waste'] }))
 
 router.post('/login', account.login)
 router.get('/account', account.account)
+router.post('/waste', waste.delivery)
 
+router.use((err, req, res, next) => {
+    if(err instanceof CastError) {
+        res.status(400).json(err.stack)
+    } else {
+        next(err)
+    }
+})
 // handle all 404 requests
 router.use(function (req,res){
     res.status(404).json({});
