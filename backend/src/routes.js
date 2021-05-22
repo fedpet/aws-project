@@ -4,10 +4,10 @@ const { auth, guard, createToken } = require('./auth')
 const { CastError } = require('mongoose')
 
 const account = require('./controllers/login')(createToken)
-const notification = require('./controllers/notificationController');
+const notification = require('./controllers/notificationController')
 const waste = require('./controllers/waste')
 
-router.use( auth.unless({ path: ['/login', '/waste'] }));
+router.use( auth.unless({ path: ['/login', '/waste'] }))
 
 router.post('/login', account.login)
 router.get('/account', account.account)
