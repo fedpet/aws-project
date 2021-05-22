@@ -2,7 +2,6 @@ const express = require('express')
 const routes = require('./src/routes')
 const mongoose = require('mongoose')
 
-
 const app = express()
 app.use(express.json())
 app.use(routes)
@@ -14,10 +13,17 @@ process.on('unhandledRejection', (error) => {
   console.log(error)
 })
 
-console.log(process.env.NODE_ENV)
-
-//mongoose.set('returnOriginal', false) // update queries will return the modified object instead of the original one
-//await mongoose.connect(process.env.DB_CONNECTION, {useNewUrlParser:true, useUnifiedTopology:true})
+if (process.env.DB_CONNECTION) {
+  mongoose.connect(process.env.DB_CONNECTION, {
+    useNewUrlParser:true,
+    useUnifiedTopology:true,
+    useCreateIndex: true,
+    returnOriginal: false // update queries will return the modified object instead of the original one
+  }).catch(err => {
+    console.log(err)
+    process.abort()
+  })
+}
 
 app.listen(PORT,() => {
   console.log('listening on http://localhost:' + PORT)

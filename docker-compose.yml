@@ -44,7 +44,8 @@ services:
     image: mongo:4.4.4
     networks:
       - backend-database
-    #volumes:
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     #  - ./data:/data/db
 networks:
   frontend-backend:
