@@ -36,7 +36,7 @@ exports.markAsRead = function(req, res) {
                 res.status(500).json(err);
             }
         });
-    }
+    })
 }
 
 //Handle get notifications between two dates
