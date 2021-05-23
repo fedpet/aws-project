@@ -1,37 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from "react";
+import Chart from './components/Chart'
 
 
 function App() {
-  const [exampleData, setExampleData] = useState([]);
+  const [chartData, setChartData] = useState([
+      { type: 'paper',  total: 3 },
+      { type: 'plastic', total: 4 },
+  ]);
 
   useEffect(() => {
-    fetch("/api/example")
-      .then(response => response.json())
-      .then(json => setExampleData(json));
+    fetch("/api/waste?groupByType=true")
+        .then(response => response.json())
+        .then(json => setChartData(json));
   }, []);
   
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-	    <ul>
-	    {exampleData.map(content => (
-		  <li key={content.id}>{content.title}</li>
-	    ))}
-	    </ul>
+        <Chart title="Waste" data={chartData}/>
       </header>
     </div>
   );
