@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans&display=swap');
+@import '~bootstrap/scss/functions';
+@import 'variables';
+@import '~bootstrap/scss/bootstrap';
+
+b.login-wrapper {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }

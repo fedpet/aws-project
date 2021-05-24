@@ -1,29 +1,42 @@
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import { useState, useEffect } from "react";
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import PieChart from './components/PieChart'
 import LineChart from './components/LineChart'
+import Login from "./login/Login";
+import Dashboard from './Dashboard/Dashboard';
+import useToken from "./login/useToken";
 
+function setToken(userToken) {
+  sessionStorage.setItem('token', JSON.stringify(userToken));
+}
+
+function getToken() {
+  const tokenString = sessionStorage.getItem('token');
+  const userToken = JSON.parse(tokenString);
+  return userToken?.token
+}
 
 function App() {
-  const [chartData, setChartData] = useState([
-      { type: 'paper',  total: 3 },
-      { type: 'plastic', total: 4 },
-  ]);
+  const { token, setToken } = useToken();
 
-  useEffect(() => {
-    fetch("/api/waste?groupByType=true&includeDataPoints=true")
-        .then(response => response.json())
-        .then(json => setChartData(json));
-  }, []);
-  
+  if(!token) {
+    return <Login setToken={setToken}/>
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <PieChart title="Waste" data={chartData}/>
-        <LineChart title="Waste" data={chartData}/>
-      </header>
+    <div className="wrapper">
+      <BrowserRouter>
+        <Switch>
+          <Route path="/">
+            <Dashboard />
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }
