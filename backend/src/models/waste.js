@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const schema = new Schema({
-    account: { type: Schema.Types.ObjectId, required: true },
+    account: { type: Schema.Types.ObjectId, required: true, ref: 'Account' },
     type: { type: String, required: true },
     quantity: { type: Number, required: true },
     date: { type: Date, default: Date.now, required: true, index: true }
