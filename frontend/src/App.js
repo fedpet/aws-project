@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from "react";
-import Chart from './components/Chart'
+import PieChart from './components/PieChart'
+import LineChart from './components/LineChart'
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    fetch("/api/waste?groupByType=true")
+    fetch("/api/waste?groupByType=true&includeDataPoints=true")
         .then(response => response.json())
         .then(json => setChartData(json));
   }, []);
@@ -20,7 +21,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Chart title="Waste" data={chartData}/>
+        <PieChart title="Waste" data={chartData}/>
+        <LineChart title="Waste" data={chartData}/>
       </header>
     </div>
   );

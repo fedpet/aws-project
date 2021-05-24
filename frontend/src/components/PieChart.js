@@ -6,7 +6,12 @@ function capitalized(str) {
     return str.charAt(0).toUpperCase() + str.substring(1)
 }
 
-class Chart extends React.Component {
+class PieChart extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = PieChart.getDerivedStateFromProps(props, {})
+    }
+
     static getDerivedStateFromProps(props, state) {
         return {
             chartOptions: {
@@ -15,6 +20,19 @@ class Chart extends React.Component {
                     plotBorderWidth: null,
                     plotShadow: false,
                     type: 'pie'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y} Kg</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.y} Kg'
+                        }
+                    }
                 },
                 title: {
                     text: props.title
@@ -28,12 +46,10 @@ class Chart extends React.Component {
     }
 
     render() {
-        const { chartOptions } = this.state
         return <HighchartsReact
                 highcharts={Highcharts}
-                options={chartOptions}
-                key={chartOptions}/>;
+                options={this.state.chartOptions}/>;
     }
 }
 
-export default Chart
+export default PieChart

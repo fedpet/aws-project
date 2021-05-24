@@ -19,7 +19,7 @@ module.exports = {
     query(req, res, next) {
         let q = null
         if (req.query.groupByType) {
-            q = Waste.aggregate([
+            const pipeline = [
                 {
                     $group: {
                         _id: "$type",
@@ -32,7 +32,12 @@ module.exports = {
                         total: 1
                     }
                 }
-            ]).then(result => {
+            ]
+            if(req.query.includeDataPoints) {
+                pipeline[0].$group.data = { $push:  { date: "$date", quantity: "$quantity" } }
+                pipeline[1].$project.data = 1
+            }
+            q = Waste.aggregate(pipeline).then(result => {
                 const sum = result.reduce((a,b) => a.total + b.total)
                 result.map(r => {
                     r.percentage = r.total / sum

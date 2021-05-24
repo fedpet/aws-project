@@ -52,13 +52,19 @@ describe('Waste querying system', () => {
     })
     it('should allow grouping', () =>
         request(app)
-            .get('/waste?groupByType=true')
+            .get('/waste?groupByType=true&includeDataPoints=true')
             .expect(200)
             .expect('Content-Type', /json/)
             .expect(res => {
                 expect(res.body).toStrictEqual([
-                    { type: 'paper', total: 3, percentage: 0.3 },
-                    { type: 'plastic', total: 7, percentage: 0.7 }
+                    { type: 'paper', total: 3, percentage: 0.3, data:[
+                            {date:new Date('2021-06-03').toISOString(), quantity:1},
+                            {date:new Date('2021-06-04').toISOString(), quantity:2},
+                        ] },
+                    { type: 'plastic', total: 7, percentage: 0.7, data:[
+                            {date:new Date('2021-06-01').toISOString(), quantity:5},
+                            {date:new Date('2021-06-02').toISOString(), quantity:2},
+                        ] },
                 ])
             })
     )
