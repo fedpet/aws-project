@@ -50,9 +50,8 @@ function App() {
         </div>
       )
   } else {
-    /* Make something */
     return (
-
+       <h1>make something </h1>
     )
   }
 }

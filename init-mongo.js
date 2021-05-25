@@ -6,8 +6,6 @@ const acc2 = new ObjectId()
 db.accounts.insert([
     // admin admin
     { email: "admin", password: "$2y$04$OXSMXZRmxkCh8vpB16a2NuUkxNRxPv/UD.NcBPIa9FG4tBsi9u1Qu", role: "admin" },
-    //standard user
-    { email: "user", password: "$2y$04$OXSMXZRmxkCh8vpB16a2NuUkxNRxPv/UD.NcBPIa9FG4tBsi9u1Qu", role: "user" },
     // user1 user1
     { email: "user1", password: "$2y$04$43ZuEY1MralRFFdTxsUaeunvaZN8wk/L74TE/cMAwiQDCw5BxCp3.", role: "user" },
     // user2 user2
