@@ -50,7 +50,7 @@ function App() {
         </div>
       )
   } else {
-    /* return 404 not found page */
+    /* Make something */
     return (
 
     )
