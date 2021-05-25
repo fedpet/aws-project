@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from "react";
-import PieChart from '../components/PieChart'
-import LineChart from '../components/LineChart'
-import './Dashboard.scss';
+import PieChart from '../../components/PieChart'
+import LineChart from '../../components/LineChart'
+import './UserDashboard.scss';
 
 
 export default function Dashboard() {
@@ -14,7 +14,7 @@ export default function Dashboard() {
 
   const logout = () => {
       localStorage.clear();
-      window.location.href = "/login";
+      window.location.href = "/";
   };
 
   useEffect(() => {
