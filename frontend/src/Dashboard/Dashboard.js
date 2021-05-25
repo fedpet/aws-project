@@ -11,6 +11,7 @@ export default function Dashboard() {
       { type: 'paper',  total: 3 },
       { type: 'plastic', total: 4 },
   ]);
+
   const logout = () => {
       localStorage.clear();
       window.location.href = "/login";

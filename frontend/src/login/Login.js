@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Login.scss';
+import logo from '../images/logo.svg';
+import preview from '../images/login.jpg';
 
 async function loginUser(credentials) {
-    return fetch('http://localhost/api/login', {
+    return fetch('/api/login', {
         method: 'POST',
         headers: {
             'Content-Type':'application/json'
@@ -28,21 +30,31 @@ export default function Login({setToken}) {
     }
 
   return(
-    <div className="login-wrapper">
-      <h1>Please Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>Email</p>
-          <input type="text" onChange={e => setEmail(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={e => setPassword(e.target.value)} />
-        </label>
-        <div>
-          <button type="submit">Submit</button>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-sm-6 login-section-wrapper">
+          <div className="brand-wrapper">
+            <img src={logo} alt="logo" className="logo"/>
+          </div>
+          <div className="login-wrapper my-auto">
+            <h1 className="login-title">Login</h1>
+            <form action="#!">
+              <div className="form-group">
+                <label htmlFor="email">Email</label>
+                <input type="email" name="email" id="email" className="form-control" placeholder="email@example.com" onChange={e => setEmail(e.target.value)} />
+              </div>
+              <div className="form-group mb-4">
+                <label htmlFor="password">Password</label>
+                <input type="password" name="password" id="password" className="form-control" placeholder="enter your passsword" onChange={e => setPassword(e.target.value)}/>
+              </div>
+              <input name="login" id="login" className="btn btn-block login-btn" type="button" value="Login" onClick={handleSubmit}/>
+            </form>
+          </div>
         </div>
-      </form>
+        <div className="col-sm-6 px-0 d-none d-sm-block">
+          <img src={preview} alt="login image" className="login-img"/>
+        </div>
+      </div>
     </div>
   )
 }

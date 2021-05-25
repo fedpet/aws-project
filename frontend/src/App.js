@@ -8,16 +8,6 @@ import Login from "./login/Login";
 import Dashboard from './Dashboard/Dashboard';
 import useToken from "./login/useToken";
 
-function setToken(userToken) {
-  sessionStorage.setItem('token', JSON.stringify(userToken));
-}
-
-function getToken() {
-  const tokenString = sessionStorage.getItem('token');
-  const userToken = JSON.parse(tokenString);
-  return userToken?.token
-}
-
 function App() {
   const { token, setToken } = useToken();
 
