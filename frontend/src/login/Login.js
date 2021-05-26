@@ -27,11 +27,10 @@ export default function Login({setToken}) {
             email,
             password
         });
-        if(!token) {
-          setToken(token);
-        } else {
+        if(token) {
             setErrorMessage('Authentication error. Incorrect name or password.')
         }
+        setToken(token);
     }
 
   return(
