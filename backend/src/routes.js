@@ -3,7 +3,7 @@ const router = express.Router()
 const { auth, guard, createToken } = require('./auth')
 const { CastError } = require('mongoose')
 
-const account = require('./controllers/login')(createToken)
+const account = require('./controllers/account')(createToken)
 const notification = require('./controllers/notificationController')
 const waste = require('./controllers/waste')
 const cost = require('./controllers/cost')
@@ -11,7 +11,8 @@ const cost = require('./controllers/cost')
 router.use( auth.unless({ path: ['/login', '/waste'] }))
 
 router.post('/login', account.login)
-router.get('/account', account.account)
+router.get('/account', account.getAccount)
+router.post('/account', account.createAccount)
 router.post('/waste', waste.delivery)
 router.get('/waste', waste.query)
 router.get('/account/:account/cost', cost.calculate)
@@ -22,7 +23,7 @@ router.route('/account/:account/notifications/:notification_id')
     .post(notification.markAsRead)
 
 router.use((err, req, res, next) => {
-    if(err instanceof CastError) {
+    if(err instanceof CastError || err.name === 'ValidationError') {
         res.status(400).json(err.stack)
     } else {
         next(err)

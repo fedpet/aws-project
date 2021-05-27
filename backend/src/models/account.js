@@ -4,10 +4,17 @@ const { Schema } = mongoose
 const accountSchema = new Schema({
     email: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
-    password: String,
-    role: String
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        default: 'user'
+    }
 })
 
 accountSchema.methods.toJSON = function() {

@@ -16,9 +16,12 @@ module.exports = function(createToken) {
                     err => next(err)
                 )
         },
-        account(req, res, next) {
+        getAccount(req, res, next) {
             Account.findOne({_id: req.auth.id}).orFail(next)
                 .then(acct => res.json(acct), next)
+        },
+        createAccount(req, res, next) {
+            new Account(req.body).save().then(acct => res.status(201).json(acct), next)
         }
     }
 }
