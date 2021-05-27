@@ -106,5 +106,21 @@ describe("Account system", () => {
                     }])
                 })
         )
+        it("should allow admins to update users", async function() {
+                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user'}).save()
+                const newEmail = 'bla@bla.bla'
+                return request(app)
+                    .patch('/account/' + account.id)
+                    .send({email: newEmail})
+                    .set('Authorization', `Bearer ${token}`)
+                    .expect(200)
+                    .expect(res => {
+                        expect(res.body).toMatchObject({
+                            email: newEmail,
+                            role: 'user'
+                        })
+                    })
+            }
+        )
     })
 })
