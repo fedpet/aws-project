@@ -28,7 +28,7 @@ export default function Login({setToken}) {
             password
         });
         if(token) {
-            setErrorMessage('Authentication error. Incorrect name or password.')
+            setErrorMessage('Authentication error. Incorrect username or password.')
         }
         setToken(token);
     }
