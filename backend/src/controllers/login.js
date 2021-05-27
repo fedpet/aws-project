@@ -10,6 +10,7 @@ module.exports = function(createToken) {
                 .then(
                     acct => res.json({
                         email: acct.email,
+                        role: acct.role,
                         token: createToken(acct)
                     }),
                     err => next(err)
