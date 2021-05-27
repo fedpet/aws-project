@@ -43,7 +43,7 @@ describe("Account system", () => {
                 .send({email: email, password: pwd})
                 .then(res => res.body.token)
             return request(app)
-                .get('/account')
+                .get('/me')
                 .set('Authorization', 'Bearer ' + token)
                 .expect(200)
                 .expect('Content-Type', /json/)
@@ -58,7 +58,7 @@ describe("Account system", () => {
     describe("Account management", () => {
         it("should not allow fake tokens", () =>
             request(app)
-                .get('/account')
+                .get('/me')
                 .set('Authorization', 'Bearer ahadbawodkawdmaodpadmands')
                 .expect(401)
         )
@@ -91,6 +91,19 @@ describe("Account system", () => {
                         email: "newuser@gmail.com",
                         role: "user"
                     })
+                })
+        )
+        it("should allow admins to list all users", () =>
+            request(app)
+                .get('/account')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toHaveLength(1)
+                    expect(res.body).toMatchObject([{
+                        email: email,
+                        role: 'admin'
+                    }])
                 })
         )
     })
