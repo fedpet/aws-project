@@ -12,7 +12,7 @@ router.use( auth.unless({ path: ['/login', '/waste'] }))
 
 router.post('/login', account.login)
 router.get('/account', account.getAccount)
-router.post('/account', account.createAccount)
+router.post('/account', guard.check('admin'), account.createAccount)
 router.post('/waste', waste.delivery)
 router.get('/waste', waste.query)
 router.get('/account/:account/cost', cost.calculate)
