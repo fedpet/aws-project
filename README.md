@@ -1,2 +1,5 @@
 # Getting started
-`docker compose up` then navigate to `localhost:8080`
+`docker compose up` then navigate to `localhost`
+
+Architecture:
+![Architecture](./documentation/arch.png)
