@@ -1,0 +1,9 @@
+// Import Custom SB Admin 2 Variables (Overrides Default Bootstrap Variables)
+@import "variables.scss";
+
+// Import Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+@import "global.scss";
+@import "utilities.scss";
+@import "navigations.scss";
