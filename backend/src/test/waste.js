@@ -6,7 +6,7 @@ const expect = require('expect')
 
 describe('Waste delivery system', () => {
     it('should allow delivery for existing accounts', async function () {
-        const acct = await new Account({email: 'test', password: 'test'}).save()
+        const acct = await new Account({email: 'test', password: 'test', name: 'test'}).save()
         return request(app)
             .post('/waste')
             .send({
@@ -40,8 +40,8 @@ describe('Waste querying system', () => {
     let a1 = null
     let a2 = null
     beforeEach(async () => {
-        a1 = await new Account({email:'test1', password:'test1', role:'user'}).save()
-        a2 = await new Account({email:'test2', password:'test2', role:'user'}).save()
+        a1 = await new Account({email:'test1', password:'test1', role:'user', name:'acc1'}).save()
+        a2 = await new Account({email:'test2', password:'test2', role:'user', name:'acc2'}).save()
         await Waste.insertMany([
             { account: a1.id, type:'plastic', quantity:5, date: new Date('2021-06-01') },
             { account: a2.id, type:'plastic', quantity:2, date: new Date('2021-06-02') },

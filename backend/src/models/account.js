@@ -14,6 +14,10 @@ const accountSchema = new Schema({
     role: {
         type: String,
         default: 'user'
+    },
+    name: {
+        type: String,
+        required: true
     }
 })
 
