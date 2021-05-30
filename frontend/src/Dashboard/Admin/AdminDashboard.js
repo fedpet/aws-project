@@ -5,6 +5,7 @@ import Sidebar from './components/Navigation/Sidebar';
 import Topbar from './components/Navigation/Topbar';
 import PageHeading from './components/PageHeading';
 import Users from './components/Api/UserList';
+import Statistics from './components/Api/Statistics';
 
 //Redux
 import { Provider } from 'react-redux';
@@ -36,36 +37,18 @@ class Dashboard extends Component {
               {/* <!-- Begin Page Content --> */}
               <div className="container-fluid">
 
+                <PageHeading title="Statistics" />
+
+                {/* <!-- Start statistics --> */}
+                   <Statistics/>
+                {/* <!-- End statistics --> */}
+
                 {/* <!-- Page Heading --> */}
+                <PageHeading title="Users" />
 
-                <PageHeading title="Dashboard" />
                 {/* <!-- Start User List --> */}
-                <div className="card shadow mb-4">
-                    <div className="card-header py-3">
-                        <h6 className="m-0 font-weight-bold text-primary">Users</h6>
-                    </div>
-                    <div className="card-body">
-                         <div className="table-responsive">
-                             <Users/>
-                        </div>
-                    </div>
-                </div>
+                    <Users/><br/><br/>
                 {/* <!-- End User List --> */}
-
-                {/* <!-- Content Row --> */}
-                <div className="row">
-
-                </div>
-                <div className="row">
-                  <div className="col-xl-8 col-lg-6">
-
-                  </div>
-                  <div className="col-xl-4 col-lg-6">
-
-                  </div>
-
-                </div>
-
               </div>
               {/* <!-- /.container-fluid --> */}
 

@@ -4,7 +4,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
-
 class UserList extends Component {
   state = {
         users: [],
@@ -38,21 +37,39 @@ class UserList extends Component {
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json)
                 this.setState({users: json})
         });
     }
 
   render() {
+      const pagination = {
+         page: 1,
+         sizePerPageList: [ {
+           text: '5', value: 5
+         }, {
+           text: '10', value: 10
+         }, {
+           text: 'All', value: this.state.users.length
+         } ],
+         sizePerPage: 5,
+         pageStartIndex: 1,
+         paginationSize: 3,
+         prePage: 'Prev',
+         nextPage: 'Next',
+         firstPage: 'First',
+         lastPage: 'Last',
+      };
+
       return (
-        <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 50 }}>
             <BootstrapTable
              striped
-             hover keyField='email'
+             hover
+             keyField='email'
              data={ this.state.users }
              columns={ this.state.columns }
              filter={ filterFactory() }
-             pagination={ paginationFactory() }/>
+             pagination={ paginationFactory(pagination) }/>
         </div>
       );
   }

@@ -31,6 +31,24 @@ class Sidebar extends Component {
         </li>
 
         {/* <!-- Divider --> */}
+        <hr className="sidebar-divider" />
+        {/* <!-- Heading --> */}
+        <div className="sidebar-heading">
+          Report
+        </div>
+
+        <li className="nav-item">
+          <Link className="nav-link" to="/charts">
+            <i className="fas fa-fw fa-users"></i>
+            <span>User List</span></Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/charts">
+            <i class="fas fa-fw fa-chart-pie"></i>
+            <span>Statistics</span></Link>
+        </li>
+
+        {/* <!-- Divider --> */}
         <hr className="sidebar-divider d-none d-md-block" />
 
         {/* <!-- Sidebar Toggler (Sidebar) --> */}
