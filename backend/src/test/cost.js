@@ -9,7 +9,7 @@ describe('Waste cost calculator', () => {
     let acct = null
     let token = null
     beforeEach(async () => {
-        acct = await new Account({email:'test1', password:'test1', role:'user'}).save()
+        acct = await new Account({email:'test1', password:'test1', role:'user', name:'test'}).save()
         token = createToken(acct)
         await Waste.insertMany([
             { account: acct.id, type:'plastic', quantity:999, date: new Date('2021-05-31 23:59:59') },
