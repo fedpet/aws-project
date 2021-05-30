@@ -5,10 +5,15 @@ import Sidebar from './components/Navigation/Sidebar';
 import Topbar from './components/Navigation/Topbar';
 import PageHeading from './components/PageHeading';
 
+//Redux
+import { Provider } from 'react-redux';
+import { Store } from '../../redux/store';
+
 class Dashboard extends Component {
 
   render() {
     return (
+    <Provider store={Store}>
       <div>
         {/* <!-- Page Wrapper --> */}
         <div id="wrapper">
@@ -58,7 +63,7 @@ class Dashboard extends Component {
             <footer className="sticky-footer bg-white">
               <div className="container my-auto">
                 <div className="copyright text-center my-auto">
-                  <span>Copyright &copy; Your Website 2019</span>
+                  <span>Copyright &copy; aws-project 2021</span>
                 </div>
               </div>
             </footer>
@@ -74,6 +79,7 @@ class Dashboard extends Component {
         <a className="scroll-to-top rounded" href="#page-top">
           <i className="fas fa-angle-up"></i>
         </a></div>
+       </Provider>
     )
   }
 }

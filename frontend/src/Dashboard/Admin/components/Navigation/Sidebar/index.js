@@ -17,7 +17,7 @@ class Sidebar extends Component {
           <div className="sidebar-brand-icon rotate-n-15">
             <i className="fas fa-laugh-wink"></i>
           </div>
-          <div className="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+          <div className="sidebar-brand-text mx-3">AWS-PROJECT</div>
         </a>
 
         {/* <!-- Divider --> */}

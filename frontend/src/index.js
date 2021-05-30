@@ -10,16 +10,8 @@ import $ from 'jquery';
 import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-//Redux
-import { Provider } from 'react-redux';
-import { Store } from './redux/store';
-import { dom } from '@fortawesome/fontawesome-svg-core';
-dom.watch();
-
 ReactDOM.render(
-<Provider store={Store}>
-    <App />
-</Provider> , document.getElementById('root'));
+    <App />, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
