@@ -7,9 +7,16 @@ import { clickMenuOpen } from '../../../../../redux/actions';
 
 
 class Topbar extends Component {
+
+
+
     render() {
       const { clickMenuOpen } = this.props;
 
+      const logout = () => {
+          localStorage.clear();
+          window.location.href = "/";
+      };
         return (
             <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -117,7 +124,7 @@ class Topbar extends Component {
                     Profile
                       </a>
                   <div className="dropdown-divider"></div>
-                  <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                  <a className="dropdown-item" href="#" data-toggle="modal"  onClick={logout} data-target="#logoutModal">
                     <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                       </a>
