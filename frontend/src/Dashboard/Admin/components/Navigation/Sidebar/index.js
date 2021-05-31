@@ -44,7 +44,7 @@ class Sidebar extends Component {
         </li>
         <li className="nav-item">
           <Link className="nav-link" to="/charts">
-            <i class="fas fa-fw fa-chart-pie"></i>
+            <i className="fas fa-fw fa-chart-pie"></i>
             <span>Statistics</span></Link>
         </li>
 

@@ -14,18 +14,18 @@ class Statistics extends Component {
 
   render() {
     return(
-        <div class="row">
-          <div class="col-xl-8 col-lg-7">
-              <div class="card shadow mb-4">
-                  <div class="card-body">
+        <div className="row">
+          <div className="col-xl-8 col-lg-7">
+              <div className="card shadow mb-4">
+                  <div className="card-body">
                          <LineChart title="Waste" data={this.state.chartData}/>
                   </div>
               </div>
           </div>
 
-          <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4">
-                  <div class="card-body">
+          <div className="col-xl-4 col-lg-5">
+              <div className="card shadow mb-4">
+                  <div className="card-body">
                     <PieChart title="Waste" data={this.state.chartData}/>
                   </div>
               </div>

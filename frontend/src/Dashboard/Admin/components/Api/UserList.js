@@ -3,6 +3,9 @@ import { useState, useEffect } from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+import { Modal, Button } from "react-bootstrap";
+
 
 class UserList extends Component {
   state = {
@@ -12,14 +15,27 @@ class UserList extends Component {
                 text: 'Email',
                 sort: true,
                 filter: textFilter()
-            },
+            },{
+                 dataField: 'name',
+                 text: 'Name',
+                 sort: true,
+                 filter: textFilter()
+             },
             {
                 dataField: 'role',
                 text: 'Role',
-                sort: true
+                sort: true,
+                filter: textFilter()
             }
-        ]
+        ],
+        isOpen: false,
+        modalInfo: [],
     }
+
+    openModal = () => this.setState({ isOpen: true });
+    closeModal = () => this.setState({ isOpen: false });
+
+
     componentDidMount() {
         var obj = {
             headers: {
@@ -60,6 +76,13 @@ class UserList extends Component {
          lastPage: 'Last',
       };
 
+    const rowEvents = {
+        onClick: (e, row) => {
+           this.setState({ isOpen: true });
+           this.setState({ modalInfo: row });
+        }
+    }
+
       return (
         <div className="card shadow mb-4">
           <div className="card-body">
@@ -72,10 +95,28 @@ class UserList extends Component {
                  data={ this.state.users }
                  columns={ this.state.columns }
                  filter={ filterFactory() }
-                 pagination={ paginationFactory(pagination) }/>
+                 pagination={ paginationFactory(pagination) }
+                 rowEvents={rowEvents}
+                 />
+
+               <Modal show={this.state.isOpen} onHide={this.closeModal}>
+                 <Modal.Header closeButton>
+                   <Modal.Title>{ this.state.modalInfo.name }</Modal.Title>
+                 </Modal.Header>
+                 <Modal.Body>
+
+                 </Modal.Body>
+                 <Modal.Footer>
+                   <Button variant="secondary" onClick={this.closeModal}>
+                     Close
+                   </Button>
+                   <Button variant="primary" onClick={this.closeModal}>
+                     Save Changes
+                   </Button>
+                 </Modal.Footer>
+               </Modal>
           </div>
         </div>
-
       );
   }
 }
