@@ -5,6 +5,11 @@
 \usepackage{graphicx}
 \usepackage{cleveref}
 \usepackage{dirtree}
+\usepackage{xcolor}
+
+\definecolor{codegray}{gray}{0.925}
+\newcommand{\code}[1]{\colorbox{codegray}{\texttt{\detokenize{#1}}}}
+\newenvironment{codeblock}[1]{\colorbox{codegray}{\texttt{\detokenize{#1}}}}
 
 \title{
     Titolo Progetto \\
@@ -115,8 +120,12 @@ TODO: descrivere migliorie
 
 
 \section{Deployment}
-Rilascio, installazione e messa in funzione.
+%Rilascio, installazione e messa in funzione.
+Il progetto può essere scaricato con \code{git clone https://github.com/fedpet/aws-project.git} ed avviato con
+\code{docker compose up} nella sua cartella root. A questo punto basterà aprire localhost con un browser web per
+vederne l'interfaccia.
 
+TODO: rilascio di immagini docker senza clonare la repo
 
 \section{Conclusioni}
 Conclusioni
