@@ -10,7 +10,7 @@ describe("Account system", () => {
     const cryptedPwd = '$2b$04$089m3GJ8gb6.FBofLHlRGOqyPhuxVjRzT25Wa.2hW36gcPZsnVGDm'
     let token = undefined
     beforeEach(() =>
-        new Account({email: email, password: cryptedPwd, role: 'admin'})
+        new Account({email: email, password: cryptedPwd, role: 'admin', name:'Name'})
             .save()
             .then(acct => {
                 token = createToken(acct)
@@ -83,7 +83,7 @@ describe("Account system", () => {
             request(app)
                 .post('/account')
                 .set('Authorization', `Bearer ${token}`)
-                .send({ email: "newuser@gmail.com", role: "user", password: "testpassword"})
+                .send({ email: "newuser@gmail.com", role: "user", password: "testpassword", name: "test"})
                 .expect(201)
                 .expect(res => {
                     expect(res.body).not.toHaveProperty('password')
@@ -107,7 +107,7 @@ describe("Account system", () => {
                 })
         )
         it("should allow admins to update users", async function() {
-                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user'}).save()
+                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
                 const newEmail = 'bla@bla.bla'
                 return request(app)
                     .patch('/account/' + account.id)
@@ -117,8 +117,24 @@ describe("Account system", () => {
                     .expect(res => {
                         expect(res.body).toMatchObject({
                             email: newEmail,
-                            role: 'user'
+                            role: 'user',
+                            name: 'test'
                         })
+                    })
+            }
+        )
+        it("should allow admins to delete accounts", async function() {
+                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
+                await request(app)
+                    .delete('/account/' + account.id)
+                    .set('Authorization', `Bearer ${token}`)
+                    .expect(204)
+                return request(app)
+                    .get('/account')
+                    .set('Authorization', `Bearer ${token}`)
+                    .expect(200)
+                    .expect(res => {
+                        expect(res.body.map(r => r.id)).not.toContain(account.id)
                     })
             }
         )
