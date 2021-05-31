@@ -59,11 +59,12 @@ a {
   }
 }
 
-[class^="col-"] {
-    width: 50%;
- }
+
 .react-bootstrap-table-pagination-list {
     width: 50%;
+}
+.react-bootstrap-table table {
+  table-layout: auto;
 }
 
 .statistics-area {

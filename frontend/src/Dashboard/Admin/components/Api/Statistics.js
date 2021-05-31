@@ -14,14 +14,23 @@ class Statistics extends Component {
 
   render() {
     return(
-    <div className="row statistics-area">
-       <div className="col-xl-8 col-lg-7">
-           <LineChart title="Waste" data={this.state.chartData}/>
-       </div>
-       <div className="col-xl-4 col-lg-5">
-            <PieChart title="Waste" data={this.state.chartData}/>
-       </div>
-     </div>
+        <div class="row">
+          <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                  <div class="card-body">
+                         <LineChart title="Waste" data={this.state.chartData}/>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                  <div class="card-body">
+                    <PieChart title="Waste" data={this.state.chartData}/>
+                  </div>
+              </div>
+          </div>
+        </div>
     )
   }
 }

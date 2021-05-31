@@ -61,16 +61,21 @@ class UserList extends Component {
       };
 
       return (
-        <div style={{ marginTop: 50 }}>
-            <BootstrapTable
-             striped
-             hover
-             keyField='email'
-             data={ this.state.users }
-             columns={ this.state.columns }
-             filter={ filterFactory() }
-             pagination={ paginationFactory(pagination) }/>
+        <div className="card shadow mb-4">
+          <div className="card-body">
+                <BootstrapTable
+                 striped
+                 hover
+                 keyField='email'
+                 wrapperClasses="table-responsive"
+                 bordered={false}
+                 data={ this.state.users }
+                 columns={ this.state.columns }
+                 filter={ filterFactory() }
+                 pagination={ paginationFactory(pagination) }/>
+          </div>
         </div>
+
       );
   }
 }
