@@ -4,6 +4,7 @@
 \usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{cleveref}
+\usepackage{dirtree}
 
 \title{
     Titolo Progetto \\
@@ -43,12 +44,26 @@ Questo aiuta a separare frontend e backend in modo trasparente e senza bisogno d
 \label{fig:arch}
 \end{figure}
 
+\subsection{Database}
+Il modello del database è semplice e raffigurato in \Cref{fig:db}. L'applicazione può avere un numero variabile di account.
+Ad ogni account sono associate le proprie notifiche e conferimenti (Waste). Un account oltre ai dati di identificazione
+(email e password), ha un ruolo (role) per distinguere amministratori da utenti. Per ogni conferimento vengono memorizzati
+la data, il tipo di spazzatura (es. plastica o carta) e la quantità. Per ogni notifica vengono memorizzati la data di creazione,
+una flag per sapere se è stata letta, ed il tipo e quantità per i conferimenti.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{db}
+    \caption{Modello del database}
+    \label{fig:db}
+\end{figure}
+
 \subsection{Interfaccia utente}
 TODO. Mockup....
 
 \section{Tecnologie}
 Il progetto utilizza le seguenti tecnologie:
 \begin{itemize}
+    \item Github Actions - per continous integration
     \item Docker - per disaccoppiare il software dal sistema operativo e facilitarne il porting ed installazione.
     \item nginx - utilizzato come reverse proxy
     \item MongoDB - database non relazionale di documenti
@@ -69,7 +84,35 @@ Il progetto utilizza le seguenti tecnologie:
 Solo aspetti rilevanti.
 
 \section{Test}
-Test effettuati sul codice e test con utenti.
+\subsection{Codice}
+A livello di codice sono state adottate tecniche di continous integration con le Github Actions ed il framework e librerie di testing
+Mocha e Supertest.
+Ad ogni push di codice viene eseguita automaticamente la suite di testing opportunatamente creata.
+Questo sistema aiuta a prevenire regressioni e facilita la manutenzione.
+\subsection{Interfaccia}
+Il progetto è stato testato in modalità Cognitive Walkthrough con i seguenti task:
+\dirtree{%
+.1 Visualizzazione e comprensione della propria dashboard.
+    .2 Login.
+    .2 Individuazione dashboard.
+    .2 Comprensione.
+        .3 Individuazione costo mensile.
+        .3 Individuazione quantità di spazzatura conferita in un determinato mese.
+        .3 Individuazione numero, data, e dettagli dei conferimenti avvenuti.
+    .2 Logout.
+.1 Ricevuta notifica a seguito di un conferimento.
+.1 Visualizzazione e comprensione dashboard per amministratori.
+    .2 Individuazione lista utenti.
+    .2 Individuazione quantità e ripartizione dei vari tipi di spazzatura in un determinato mese.
+.1 Creazione di un nuovo utente.
+    2. Gestione dei casi con input non valido (es. in caso di dati duplicati l'utente è in grado di capire cosa fare?)
+}
+Infine, una volta creato un prototipo funzionante e risolti i primi problemi individuati dal team di sviluppo,
+sono stati effettuati Usability Tests con 5 potenziali veri utenti. Ad ognuno di essi è stato chiesto di effettuare i task
+sopracitati senza però essere messi al corrente degli step intermedi. In questo modo è stato possibile osservare quanto fosse
+intuitiva l'interfaccia ed apportare migliorie.
+TODO: descrivere migliorie
+
 
 \section{Deployment}
 Rilascio, installazione e messa in funzione.
