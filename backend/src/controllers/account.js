@@ -29,6 +29,9 @@ module.exports = function(createToken) {
         },
         create(req, res, next) {
             new Account(req.body).save().then(acct => res.status(201).json(acct), next)
+        },
+        delete(req, res, next) {
+            Account.deleteOne({ _id: req.params.account }).then(r => res.status(204).send(), next)
         }
     }
 }

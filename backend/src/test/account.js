@@ -123,5 +123,20 @@ describe("Account system", () => {
                     })
             }
         )
+        it("should allow admins to delete accounts", async function() {
+                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
+                await request(app)
+                    .delete('/account/' + account.id)
+                    .set('Authorization', `Bearer ${token}`)
+                    .expect(204)
+                return request(app)
+                    .get('/account')
+                    .set('Authorization', `Bearer ${token}`)
+                    .expect(200)
+                    .expect(res => {
+                        expect(res.body.map(r => r.id)).not.toContain(account.id)
+                    })
+            }
+        )
     })
 })
