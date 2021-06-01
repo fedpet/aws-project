@@ -34,13 +34,15 @@ class UserList extends Component {
             }
         ],
         isOpen: false,
+        newUserModalIsOpen: false,
         modalInfo: [],
         user:[]
     }
 
     openModal = () => this.setState({ isOpen: true });
     closeModal = () => this.setState({ isOpen: false });
-
+    openNewUserModal = () => this.setState({ newUserModalIsOpen: true });
+    closeNewUserModal = () => this.setState({ newUserModalIsOpen: false });
 
     componentDidMount() {
         this.getUserList();
@@ -58,7 +60,9 @@ class UserList extends Component {
         .then(response => response.json())
         .then(json => {
             this.setState({users: json})
-        });
+        }).catch((error) => {
+          alert("some error: " + error);
+       });;
     }
 
 
@@ -79,8 +83,8 @@ class UserList extends Component {
             <Redirect to="/admin" />;
             this.closeModal();
         }).catch((error) => {
-            console.log(error)
-          });
+            alert("some error: " + error);
+         });
     }
 
     handleChange = e => {
@@ -104,7 +108,30 @@ class UserList extends Component {
             <Redirect to="/admin" />;
             this.closeModal();
         }).catch((error) => {
-            console.log(error)
+            alert("some error: " + error);
+        });
+    }
+
+    handleAddUser() {
+        if(this.state.user.length < 4) {
+            alert("All fields are required!")
+            return;
+        }
+        fetch("/api/account/", {
+            method: 'POST',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.user)
+        }).then(response =>  {
+            this.getUserList();
+            <Redirect to="/admin" />;
+            this.closeNewUserModal();
+        }).catch((error) => {
+            alert("some error: " + error);
         });
     }
 
@@ -136,6 +163,9 @@ class UserList extends Component {
 
       return (
         <div className="card shadow mb-4">
+          <div className="card-header">
+                <button onClick={this.openNewUserModal} className="btn btn-primary">Add user</button>
+           </div>
           <div className="card-body">
                 <BootstrapTable
                  striped
@@ -179,6 +209,39 @@ class UserList extends Component {
                      </div>
                  </Modal.Body>
                </Modal>
+
+              {/*Add new user modal*/}
+              <Modal show={this.state.newUserModalIsOpen} onHide={this.closeNewUserModal}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Add user</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="modal-body">
+                      <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input type="text" className="form-control" id="username" name="email" onChange={this.handleChange} placeholder="username" required />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="userRole">Role</label>
+                        <select className="form-control" name="role" onChange={this.handleChange} id="userRole">
+                          <option>user</option>
+                          <option>admin</option>
+                        </select>
+                      </div>
+                     <div className="form-group">
+                       <label htmlFor="name">Name</label>
+                       <input type="text" className="form-control" id="name" name="name" onChange={this.handleChange} placeholder="name" required />
+                     </div>
+                      <div className="form-group">
+                        <label htmlFor="password1">Password</label>
+                        <input type="password" className="form-control" name="password" id="password1" onChange={this.handleChange} placeholder="Password" required />
+                      </div>
+                    </div>
+                    <div className="modal-footer border-top-0 d-flex justify-content-center">
+                      <button type="submit" onClick={this.handleAddUser.bind(this)} className="btn btn-success">Add</button>
+                    </div>
+                </Modal.Body>
+              </Modal>
           </div>
         </div>
       );
