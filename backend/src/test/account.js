@@ -110,36 +110,47 @@ describe("Account system", () => {
                 })
         )
         it("should allow admins to update users", async function() {
-                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
-                const newEmail = 'bla@bla.bla'
-                return request(app)
-                    .patch('/account/' + account.id)
-                    .send({email: newEmail})
-                    .set('Authorization', `Bearer ${token}`)
-                    .expect(200)
-                    .expect(res => {
-                        expect(res.body).toMatchObject({
-                            email: newEmail,
-                            role: 'user',
-                            name: 'test'
-                        })
+            const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
+            const newEmail = 'bla@bla.bla'
+            return request(app)
+                .patch('/account/' + account.id)
+                .send({email: newEmail})
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toMatchObject({
+                        email: newEmail,
+                        role: 'user',
+                        name: 'test'
                     })
-            }
-        )
+                })
+        })
+        it("should allow admins to change passwords", async function() {
+            const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
+            const newPwd = 'newPwd'
+            await request(app)
+                .patch('/account/' + account.id)
+                .send({password: newPwd})
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+            return request(app)
+                .post('/login')
+                .send({email: 'target@target.com', password: newPwd})
+                .expect(200)
+        })
         it("should allow admins to delete accounts", async function() {
-                const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
-                await request(app)
-                    .delete('/account/' + account.id)
-                    .set('Authorization', `Bearer ${token}`)
-                    .expect(204)
-                return request(app)
-                    .get('/account')
-                    .set('Authorization', `Bearer ${token}`)
-                    .expect(200)
-                    .expect(res => {
-                        expect(res.body.map(r => r.id)).not.toContain(account.id)
-                    })
-            }
-        )
+            const account = await new Account({email: 'target@target.com', password: cryptedPwd, role: 'user', name: 'test'}).save()
+            await request(app)
+                .delete('/account/' + account.id)
+                .set('Authorization', `Bearer ${token}`)
+                .expect(204)
+            return request(app)
+                .get('/account')
+                .set('Authorization', `Bearer ${token}`)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.map(r => r.id)).not.toContain(account.id)
+                })
+        })
     })
 })
