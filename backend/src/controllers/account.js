@@ -25,7 +25,6 @@ module.exports = function(createToken) {
             Account.find().then(list => res.json(list), next)
         },
         update(req, res, next) {
-
             Account.findOneAndUpdate({ _id: req.params.account }, req.body, { new: true })
                 .then(acct => res.json(acct), next)
         },
