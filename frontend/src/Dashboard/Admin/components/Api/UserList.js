@@ -5,12 +5,17 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Modal, Button } from "react-bootstrap";
-
+import { Redirect } from 'react-router-dom';
 
 class UserList extends Component {
   state = {
         users: [],
         columns: [{
+                  dataField: 'id',
+                  text: 'ID',
+                  sort: true,
+                  filter: textFilter()
+              },{
                 dataField: 'email',
                 text: 'Email',
                 sort: true,
@@ -30,13 +35,7 @@ class UserList extends Component {
         ],
         isOpen: false,
         modalInfo: [],
-        user:[{
-            email: '',
-            name: '',
-            role: '',
-            password: ''
-        }],
-        checkPassword: ''
+        user:[]
     }
 
     openModal = () => this.setState({ isOpen: true });
@@ -44,11 +43,10 @@ class UserList extends Component {
 
 
     componentDidMount() {
-        var obj = {
-            headers: {
-                'Authorization': localStorage.getItem('token')
-            }
-        }
+        this.getUserList();
+    }
+
+    getUserList() {
         fetch("/api/account", {
             method: 'GET',
             withCredentials: true,
@@ -56,7 +54,6 @@ class UserList extends Component {
             headers: {
                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
             }
-
         })
         .then(response => response.json())
         .then(json => {
@@ -64,20 +61,26 @@ class UserList extends Component {
         });
     }
 
-    handleUserSaveChange() {
-        fetch("/api/account/" +JSON.stringify(localStorage.getItem('token')).id, {
+
+     handleUserSaveChange(id) {
+        {/*console.warn(JSON.stringify(this.state.user))*/}
+        fetch("/api/account/" +this.state.modalInfo.id, {
             method: 'PATCH',
             withCredentials: true,
             credentials: 'include',
             headers: {
                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
+                'Content-Type': 'application/json'
             },
-            data: this.state.user
+            body: JSON.stringify(this.state.user)
         }).then(response => response.json())
-        .then(response =>  {
-            this.setState({users: json});
-            this.props.history.push('/admin');
-        })
+        .then(json =>  {
+            this.getUserList();
+            <Redirect to="/admin" />;
+            this.closeModal();
+        }).catch((error) => {
+            console.log(error)
+          });
     }
 
     handleChange = e => {
@@ -86,6 +89,23 @@ class UserList extends Component {
       this.setState(prevState => ({
         user: { ...prevState.user,  [e.target.name]: e.target.value }
       }))
+    }
+
+    handleDelete() {
+        fetch("/api/account/" +this.state.modalInfo.id, {
+            method: 'DELETE',
+            withCredentials: true,
+            credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
+            }
+        }).then(response =>  {
+            this.getUserList();
+            <Redirect to="/admin" />;
+            this.closeModal();
+        }).catch((error) => {
+            console.log(error)
+        });
     }
 
   render() {
@@ -135,7 +155,6 @@ class UserList extends Component {
                    <Modal.Title>{ this.state.modalInfo.name }</Modal.Title>
                  </Modal.Header>
                  <Modal.Body>
-                   <form onSubmit={this.handleUserSaveChange}>
                      <div className="modal-body">
                        <div className="form-group">
                          <label htmlFor="username">Username</label>
@@ -153,15 +172,11 @@ class UserList extends Component {
                          <label htmlFor="password1">Password</label>
                          <input type="password" className="form-control" name="password" id="password1" onChange={this.handleChange}  placeholder="Password"/>
                        </div>
-                       <div className="form-group">
-                         <label htmlFor="password2">Confirm Password</label>
-                         <input type="password" className="form-control" id="password2" onChange={e => this.setState({checkPassword: e.target.value})} placeholder="Confirm Password"/>
-                       </div>
                      </div>
                      <div className="modal-footer border-top-0 d-flex justify-content-center">
-                       <button type="submit" className="btn btn-success">Save Changes</button>
+                       <button onClick={this.handleUserSaveChange.bind(this)} className="btn btn-success">Save Changes</button>
+                       <button onClick={this.handleDelete.bind(this)} className="btn btn-danger">Delete</button>
                      </div>
-                   </form>
                  </Modal.Body>
                </Modal>
           </div>
