@@ -12,6 +12,7 @@ module.exports = function(createToken) {
                         email: acct.email,
                         role: acct.role,
                         name: acct.name,
+                        id: acct.id,
                         token: createToken(acct)
                     }),
                     err => next(err)
