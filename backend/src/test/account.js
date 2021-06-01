@@ -8,11 +8,13 @@ describe("Account system", () => {
     const email = 'test@test.com'
     const pwd = 'password'
     const cryptedPwd = '$2b$04$089m3GJ8gb6.FBofLHlRGOqyPhuxVjRzT25Wa.2hW36gcPZsnVGDm'
+    let id = undefined
     let token = undefined
     beforeEach(() =>
         new Account({email: email, password: cryptedPwd, role: 'admin', name:'Name'})
             .save()
             .then(acct => {
+                id = acct.id
                 token = createToken(acct)
                 return acct
             })
@@ -33,6 +35,7 @@ describe("Account system", () => {
                     expect(res.body).not.toHaveProperty('password')
                     expect(res.body).toMatchObject({
                         email: email,
+                        id: id,
                         token: /.*/
                     })
                 })

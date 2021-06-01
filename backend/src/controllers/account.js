@@ -11,6 +11,7 @@ module.exports = function(createToken) {
                     acct => res.json({
                         email: acct.email,
                         role: acct.role,
+                        id: acct.id,
                         token: createToken(acct)
                     }),
                     err => next(err)
