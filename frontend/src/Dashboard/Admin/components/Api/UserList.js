@@ -6,6 +6,11 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import { Modal, Button } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Toast from 'react-bootstrap/Toast';
+import ToastHeader from 'react-bootstrap/ToastHeader';
+import ToastBody from 'react-bootstrap/ToastBody';
 
 class UserList extends Component {
   state = {
@@ -36,13 +41,17 @@ class UserList extends Component {
         isOpen: false,
         newUserModalIsOpen: false,
         modalInfo: [],
-        user:[]
+        user:[],
+        showToggle: false,
+        toggleMessage: []
     }
 
     openModal = () => this.setState({ isOpen: true });
     closeModal = () => this.setState({ isOpen: false });
     openNewUserModal = () => this.setState({ newUserModalIsOpen: true });
     closeNewUserModal = () => this.setState({ newUserModalIsOpen: false });
+    openToggle = () => this.setState({showToggle: true});
+    closeToggle = () => this.setState({showToggle: false});
 
     componentDidMount() {
         this.getUserList();
@@ -66,8 +75,7 @@ class UserList extends Component {
     }
 
 
-     handleUserSaveChange(id) {
-        {/*console.warn(JSON.stringify(this.state.user))*/}
+     handleUserSaveChange() {
         fetch("/api/account/" +this.state.modalInfo.id, {
             method: 'PATCH',
             withCredentials: true,
@@ -77,13 +85,21 @@ class UserList extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state.user)
-        }).then(response => response.json())
-        .then(json =>  {
-            this.getUserList();
-            <Redirect to="/admin" />;
-            this.closeModal();
+        }).then((response) =>  {
+            if(response.ok) {
+                this.setState({toggleMessage: {"message": "User " + this.state.modalInfo.email + " updated correctly" }});
+                this.getUserList();
+                <Redirect to="/admin" />;
+                this.openToggle();
+            } else {
+                this.setState({toggleMessage: {"message": "Some problem occurred, user " + this.state.modalInfo.email + " not updated, please check before retry" }});
+                <Redirect to="/admin" />;
+                this.openToggle();
+            }
         }).catch((error) => {
-            alert("some error: " + error);
+            this.setState({toggleMessage: {"message": "Some problem occurred, please check before retry" }});
+            <Redirect to="/admin" />;
+            this.openToggle();
          });
     }
 
@@ -96,6 +112,12 @@ class UserList extends Component {
     }
 
     handleDelete() {
+        if(this.state.modalInfo.id === JSON.parse(localStorage.getItem('token')).id) {
+            this.setState({toggleMessage: {"message": "Bad action, user " + this.state.modalInfo.email + " is currently logged and it's an admin" }});
+            <Redirect to="/admin" />;
+            this.openToggle();
+            return;
+        }
         fetch("/api/account/" +this.state.modalInfo.id, {
             method: 'DELETE',
             withCredentials: true,
@@ -103,12 +125,21 @@ class UserList extends Component {
             headers: {
                 'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
             }
-        }).then(response =>  {
-            this.getUserList();
-            <Redirect to="/admin" />;
-            this.closeModal();
+        }).then((response) =>  {
+            if(response.ok) {
+                this.setState({toggleMessage: {"message": "User " + this.state.modalInfo.email + " delete correctly" }});
+                this.getUserList();
+                <Redirect to="/admin" />;
+                 this.openToggle();
+            } else {
+                this.setState({toggleMessage: {"message": "Some problem occurred, cannot delete user " + this.state.modalInfo.email +", please check before retry" }});
+                <Redirect to="/admin" />;
+                this.openToggle();
+            }
         }).catch((error) => {
-            alert("some error: " + error);
+            this.setState({toggleMessage: {"message": "Some problem occurred, please check before retry" }});
+            <Redirect to="/admin" />;
+            this.openToggle();
         });
     }
 
@@ -126,13 +157,77 @@ class UserList extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(this.state.user)
-        }).then(response =>  {
-            this.getUserList();
-            <Redirect to="/admin" />;
-            this.closeNewUserModal();
+        }).then((response) =>  {
+            if(response.ok) {
+                 this.setState({toggleMessage: {"message": "Add user " + this.state.user.email + " correctly" }});
+                this.getUserList();
+                <Redirect to="/admin" />;
+                this.closeNewUserModal();
+                this.openToggle();
+            } else {
+                this.setState({toggleMessage: {"message": "Some problem occurred, cannot add user " + this.state.user.email +", please check before retry" }});
+                <Redirect to="/admin" />;
+                this.openToggle();
+            }
         }).catch((error) => {
-            alert("some error: " + error);
+            this.setState({toggleMessage: {"message": "Some problem occurred, please check before retry" }});
+            <Redirect to="/admin" />;
+            this.openToggle();
         });
+    }
+
+    saveChange = () => {
+        this.closeModal();
+        confirmAlert({
+            title: 'Confirm to save change',
+            message: 'Are you sure to do this?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {this.handleUserSaveChange()}
+                },
+                {
+                    label: 'No',
+                    onClick: () => {this.closeModal()}
+                }
+            ]
+        });
+    }
+
+    deleteUser = () => {
+       this.closeModal();
+       confirmAlert({
+           title: 'Confirm to delete user',
+           message: 'Are you sure to do this?',
+           buttons: [
+               {
+                   label: 'Yes',
+                   onClick: () => {this.handleDelete()}
+               },
+               {
+                   label: 'No',
+                   onClick: () => {this.closeModal()}
+               }
+           ]
+       });
+    }
+
+    addUser = () => {
+      this.closeNewUserModal();
+      confirmAlert({
+          title: 'Confirm to add user',
+          message: 'Are you sure to do this?',
+          buttons: [
+              {
+                  label: 'Yes',
+                  onClick: () => {this.handleAddUser()}
+              },
+              {
+                  label: 'No',
+                  onClick: () => {this.closeModal()}
+              }
+          ]
+      });
     }
 
   render() {
@@ -186,6 +281,10 @@ class UserList extends Component {
                  </Modal.Header>
                  <Modal.Body>
                      <div className="modal-body">
+                        <div className="form-group">
+                          <label htmlFor="id">ID</label>
+                          <input type="text" className="form-control" id="id" name="id" value={this.state.modalInfo.id} readOnly/>
+                        </div>
                        <div className="form-group">
                          <label htmlFor="username">Username</label>
                          <input type="text" className="form-control" id="username" name="email" defaultValue={this.state.modalInfo.email} onChange={this.handleChange} placeholder={this.state.modalInfo.email}/>
@@ -204,8 +303,8 @@ class UserList extends Component {
                        </div>
                      </div>
                      <div className="modal-footer border-top-0 d-flex justify-content-center">
-                       <button onClick={this.handleUserSaveChange.bind(this)} className="btn btn-success">Save Changes</button>
-                       <button onClick={this.handleDelete.bind(this)} className="btn btn-danger">Delete</button>
+                       <button onClick={this.saveChange} className="btn btn-success">Save Changes</button>
+                       <button onClick={this.deleteUser} className="btn btn-danger">Delete</button>
                      </div>
                  </Modal.Body>
                </Modal>
@@ -238,10 +337,38 @@ class UserList extends Component {
                       </div>
                     </div>
                     <div className="modal-footer border-top-0 d-flex justify-content-center">
-                      <button type="submit" onClick={this.handleAddUser.bind(this)} className="btn btn-success">Add</button>
+                      <button type="submit" onClick={this.addUser} className="btn btn-success">Add</button>
                     </div>
                 </Modal.Body>
               </Modal>
+
+              {/*Toogle for message*/}
+              <div
+                aria-live="polite"
+                aria-atomic="true"
+                style={{
+                  position: 'relative',
+                  minHeight: '100px',
+                }}
+              >
+              <Toast
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+              }}
+                show={this.state.showToggle} onClose={this.closeToggle} delay={5000} autohide>
+                <Toast.Header>
+                  <img
+                    src="holder.js/20x20?text=%20"
+                    className="rounded mr-2"
+                    alt=""
+                  />
+                  <strong className="mr-auto">Last operation info</strong>
+                </Toast.Header>
+                <Toast.Body>{this.state.toggleMessage.message}</Toast.Body>
+              </Toast>
+              </div>
           </div>
         </div>
       );
