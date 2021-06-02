@@ -4,11 +4,15 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { clickMenuOpen } from '../../../../../redux/actions';
-
+import { Modal, Button } from "react-bootstrap";
 
 class Topbar extends Component {
+    state = {
+        isOpen: false
+    }
 
-
+    openModal = () => this.setState({ isOpen: true });
+    closeModal = () => this.setState({ isOpen: false });
 
     render() {
       const { clickMenuOpen } = this.props;
@@ -119,12 +123,12 @@ class Topbar extends Component {
                 </a>
                 {/* <!-- Dropdown - User Information --> */}
                 <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                  <a className="dropdown-item" href="#">
+                  <a className="dropdown-item" href="#" onClick={this.openModal}>
                     <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
                       </a>
                   <div className="dropdown-divider"></div>
-                  <a className="dropdown-item" href="#" data-toggle="modal"  onClick={logout} data-target="#logoutModal">
+                  <a className="dropdown-item" href="#" onClick={logout} >
                     <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                       </a>
@@ -132,9 +136,35 @@ class Topbar extends Component {
               </li>
 
             </ul>
-
+              {/*User profile modal not editable (only readOnly)*/}
+              <Modal show={this.state.isOpen} onHide={this.closeModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>{ JSON.parse(localStorage.getItem('token')).email }</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                  <div className="modal-body">
+                     <div className="form-group">
+                       <label htmlFor="id">ID</label>
+                       <input type="text" className="form-control" id="id" name="id" value={JSON.parse(localStorage.getItem('token')).id} readOnly/>
+                     </div>
+                    <div className="form-group">
+                      <label htmlFor="username">Username</label>
+                      <input type="text" className="form-control" id="username" name="email" value={JSON.parse(localStorage.getItem('token')).email} readOnly/>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="role">Role</label>
+                      <input type="text" className="form-control" id="role" name="role" defaultValue={JSON.parse(localStorage.getItem('token')).role} readOnly/>
+                    </div>
+                   <div className="form-group">
+                     <label htmlFor="name">Name</label>
+                     <input type="text" className="form-control" id="name" name="name" defaultValue={JSON.parse(localStorage.getItem('token')).name} readOnly/>
+                   </div>
+                  </div>
+                  <code>If you want to change something like name/username or password, please use users table.</code>
+              </Modal.Body>
+        </Modal>
           </nav>
-         
+
         )
     }
 }
