@@ -37,6 +37,20 @@ module.exports = {
                 pipeline[0].$group.data = { $push:  { date: "$date", quantity: "$quantity" } }
                 pipeline[1].$project.data = 1
             }
+            let match = { }
+            if (req.query.account) {
+                match.account = req.query.account
+            }
+            if (req.query.from) {
+                match.date = { $gte: new Date(req.query.from) }
+            }
+            if (req.query.to) {
+                match.date = match.date || {}
+                match.date.$lte = new Date(req.query.to)
+            }
+            if(Object.keys(match).length > 0) {
+                pipeline.unshift({ $match: match })
+            }
             q = Waste.aggregate(pipeline).then(result => {
                 const sum = result.reduce((a,b) => a.total + b.total)
                 result.map(r => {
@@ -47,15 +61,15 @@ module.exports = {
             })
         } else {
             q = Waste.find()
-        }
-        if (req.query.account) {
-            q.where('account', req.query.account)
-        }
-        if (req.query.from) {
-            q.where('date').gte(new Date(req.query.from))
-        }
-        if (req.query.to) {
-            q.where('date').lte(new Date(req.query.to))
+            if (req.query.account) {
+                q.where('account', req.query.account)
+            }
+            if (req.query.from) {
+                q.where('date').gte(new Date(req.query.from))
+            }
+            if (req.query.to) {
+                q.where('date').lte(new Date(req.query.to))
+            }
         }
         q.then(
             result => res.status(200).json(result),
