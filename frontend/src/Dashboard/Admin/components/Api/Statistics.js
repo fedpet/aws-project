@@ -16,7 +16,6 @@ class Statistics extends Component {
     }
 
   handleFilterChartsByDate(event, picker) {
-       console.warn("All " + this.state.chartData);
        fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
        .then(response => response.json())
        .then(json => {
