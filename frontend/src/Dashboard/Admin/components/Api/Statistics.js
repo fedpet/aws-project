@@ -19,7 +19,6 @@ class Statistics extends Component {
        fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
        .then(response => response.json())
        .then(json => {
-           console.log(json);
            if(json.length > 0) {
                this.setState({chartData: json})
            }
