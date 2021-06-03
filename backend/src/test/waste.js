@@ -68,6 +68,22 @@ describe('Waste querying system', () => {
                 ])
             })
     )
+    it('should allow grouping and filtering by date', () =>
+        request(app)
+            .get('/waste?groupByType=true&includeDataPoints=true&from=2021-06-02&to=2021-06-03')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .expect(res => {
+                expect(res.body).toStrictEqual([
+                    { type: 'paper', total: 1, percentage: 0.3333333333333333, data:[
+                            {date:new Date('2021-06-03').toISOString(), quantity:1},
+                        ] },
+                    { type: 'plastic', total: 2, percentage: 0.6666666666666666, data:[
+                            {date:new Date('2021-06-02').toISOString(), quantity:2},
+                        ] },
+                ])
+            })
+    )
     it('should work with a specific account', () =>
         request(app)
             .get('/waste?account=' + a2.id)
