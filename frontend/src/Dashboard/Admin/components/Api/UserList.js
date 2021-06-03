@@ -289,10 +289,13 @@ class UserList extends Component {
                          <label htmlFor="username">Username</label>
                          <input type="text" className="form-control" id="username" name="email" defaultValue={this.state.modalInfo.email} onChange={this.handleChange} placeholder={this.state.modalInfo.email}/>
                        </div>
-                       <div className="form-group">
-                         <label htmlFor="role">Role</label>
-                         <input type="text" className="form-control" id="role" name="role" defaultValue={this.state.modalInfo.role} onChange={this.handleChange} placeholder={this.state.modalInfo.role}/>
-                       </div>
+                     <div className="form-group">
+                       <label htmlFor="userRole">Role</label>
+                       <select className="form-control" name="role" onChange={this.handleChange} id="userRole">
+                         <option>user</option>
+                         <option>admin</option>
+                       </select>
+                     </div>
                       <div className="form-group">
                         <label htmlFor="name">Name</label>
                         <input type="text" className="form-control" id="name" name="name" defaultValue={this.state.modalInfo.name} onChange={this.handleChange} placeholder={this.state.modalInfo.name}/>
