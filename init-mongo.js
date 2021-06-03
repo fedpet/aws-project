@@ -5,11 +5,11 @@ const acc1 = new ObjectId()
 const acc2 = new ObjectId()
 db.accounts.insert([
     // admin admin
-    { email: "admin", password: "$2y$04$OXSMXZRmxkCh8vpB16a2NuUkxNRxPv/UD.NcBPIa9FG4tBsi9u1Qu", role: "admin" },
+    { email: "admin", name: "admin", password: "$2y$04$OXSMXZRmxkCh8vpB16a2NuUkxNRxPv/UD.NcBPIa9FG4tBsi9u1Qu", role: "admin" },
     // user1 user1
-    { email: "user1", password: "$2y$04$43ZuEY1MralRFFdTxsUaeunvaZN8wk/L74TE/cMAwiQDCw5BxCp3.", role: "user" },
+    { email: "user1", name: "user1", password: "$2y$04$43ZuEY1MralRFFdTxsUaeunvaZN8wk/L74TE/cMAwiQDCw5BxCp3.", role: "user" },
     // user2 user2
-    { email: "user2", password: "$2y$04$BKJutNXXRw/JOuf2d3g/0e6cLeYOq63Qz/by0jUFmlx6jpEfVpRRa", role: "user" },
+    { email: "user2", name: "user1", password: "$2y$04$BKJutNXXRw/JOuf2d3g/0e6cLeYOq63Qz/by0jUFmlx6jpEfVpRRa", role: "user" },
 ])
 db.waste.insert([
     { type: "paper", quantity: 1, account: acc1, date: new Date("2020-06-01") },

@@ -21,7 +21,6 @@ function App() {
 
   if(role == 'admin') {
       return (
-        <div className="wrapper">
           <BrowserRouter>
             <Switch>
               <Route exact path="/">
@@ -32,7 +31,6 @@ function App() {
               </Route>
             </Switch>
           </BrowserRouter>
-        </div>
         )
   } else if(role === 'user'){
       return (

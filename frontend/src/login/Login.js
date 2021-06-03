@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import './Login.scss';
 import logo from '../images/logo.svg';
 import preview from '../images/login.jpg';
 
@@ -17,6 +16,7 @@ async function loginUser(credentials) {
 }
 
 export default function Login({setToken}) {
+
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [errorMessage, setErrorMessage] = useState();
@@ -34,36 +34,57 @@ export default function Login({setToken}) {
     }
 
   return(
-    <div className="container-fluid">
+         <div className="container">
+            {/* <!-- Outer Row --> */}
+            <div className="row justify-content-center">
 
-      <div className="row">
-        <div className="col-sm-6 login-section-wrapper">
-          <div className="brand-wrapper">
-            <img src={logo} alt="logo" className="logo"/>
-          </div>
-          <div className="login-wrapper my-auto">
-          { errorMessage &&
-            <div className="alert alert-danger"> {errorMessage} </div> }
-            <h1 className="login-title">Login</h1>
-            <form action="#!">
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input type="email" name="email" id="email" className="form-control" placeholder="email@example.com" onChange={e => setEmail(e.target.value)} required/>
+              <div className="col-xl-10 col-lg-12 col-md-9">
+
+                <div className="card o-hidden border-0 shadow-lg my-5">
+                  <div className="card-body p-0">
+                    {/* <!-- Nested Row within Card Body --> */}
+                    <div className="row">
+                      <div className="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                      <div className="col-lg-6">
+                        <div className="p-5">
+                            <div class="text-center">
+                                <h1 className="h4 text-gray-900 mb-2">Welcome to MyWaste</h1>
+                                <p className="mb-4">Let's reuse whatever we have now, stop making more of it, take what we gather, and make - whether it's car parts, computer cases, anything that we can use.</p>
+                                <p><spam>Ian Somerhalder</spam></p>
+                            </div>
+                            <hr/>
+                          <form onSubmit={handleSubmit} className="user">
+                            <div className="form-group">
+                              <input type="text" className="form-control form-control-user" id="username"  onChange={e => setEmail(e.target.value)}  placeholder="Enter username..." required/>
+                            </div>
+                            <div className="form-group">
+                              <input type="password" className="form-control form-control-user" id="InputPassword" placeholder="Password" onChange={e => setPassword(e.target.value)} required/>
+                            </div>
+                            <div className="form-group">
+                              <div className="custom-control custom-checkbox small">
+                                <input type="checkbox" className="custom-control-input" id="customCheck"/>
+                                <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
+                              </div>
+                            </div>
+                            <button  type="submit" className="btn btn-primary btn-user btn-block">
+                              Login
+                            </button>
+                          </form>
+                            <hr/>
+                          { errorMessage &&
+                            <div className="alert alert-danger"> {errorMessage} </div> }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
-              <div className="form-group mb-4">
-                <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password" className="form-control" placeholder="enter your passsword" onChange={e => setPassword(e.target.value)} required/>
-              </div>
-              <input name="login" id="login" className="btn btn-block login-btn" type="button" value="Login" onClick={handleSubmit}/>
-            </form>
+
+            </div>
+
           </div>
-        </div>
-        <div className="col-sm-6 px-0 d-none d-sm-block">
-          <img src={preview} alt="login image" className="login-img"/>
-        </div>
-      </div>
-    </div>
-  )
+         )
 }
 
 Login.propTypes = {
