@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import logo from '../images/logo.svg';
-import preview from '../images/login.jpg';
 
 async function loginUser(credentials) {
     return fetch('/api/login', {
