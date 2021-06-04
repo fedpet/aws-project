@@ -1,5 +1,24 @@
-const Notification = require('../models/notificationModel')
+const Notification = require('../models/notification')
 
+module.exports = {
+    query(req, res, next) {
+        let q = Notification.find({account: req.auth.id})
+        if (req.query.from) {
+            q.where('date').gte(new Date(req.query.from))
+        }
+        if (req.query.to) {
+            q.where('date').lte(new Date(req.query.to))
+        }
+        q.sort({date:'descending'})
+        q.exec().then(notifications => res.status(200).json(notifications), next)
+    },
+    markAsRead(req, res, next) {
+        Notification.findByIdAndUpdate(req.params.notification, req.body, {new:true})
+            .then(n => res.json(n), next)
+    }
+}
+
+/*
 //Handle get all notification
 exports.getNotifications = function(req, res) {
     Notification.find({ user: req.params.user }, function(err, notifications) {
@@ -54,3 +73,4 @@ exports.getNotificationByDate = function(req, res) {
         })
     });
 }
+ */
