@@ -23,14 +23,12 @@ class Topbar extends Component {
           window.location.href = "/";
       };
         return (
-            <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top sidebarToggle shadow">
+            <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
             <a class="navbar-brand" href="/">MyWaste</a>
 
             {/* <!-- Topbar Navbar --> */}
             <ul className="navbar-nav ml-auto">
-
-
 
               {/* <!-- Nav Item - Search Dropdown (Visible Only XS) --> */}
               <li className="nav-item dropdown no-arrow d-sm-none">

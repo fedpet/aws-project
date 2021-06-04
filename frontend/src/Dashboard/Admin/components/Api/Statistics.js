@@ -30,7 +30,7 @@ class Statistics extends Component {
         <div>
           <div className="d-inline-flex p-2">
               <DateRangePicker
-                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: new Date() }}
+                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment() }}
                   onApply={this.handleFilterChartsByDate.bind(this)}
                 >
                   <input type="text" className="form-control" />
