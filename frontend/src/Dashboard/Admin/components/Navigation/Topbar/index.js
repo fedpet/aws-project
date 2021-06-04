@@ -25,7 +25,7 @@ class Topbar extends Component {
         return (
             <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-            <a class="navbar-brand" href="/">MyWaste</a>
+            <a className="navbar-brand" href="/">MyWaste</a>
 
             {/* <!-- Topbar Navbar --> */}
             <ul className="navbar-nav ml-auto">
@@ -99,7 +99,6 @@ class Topbar extends Component {
                      <input type="text" className="form-control" id="name" name="name" defaultValue={JSON.parse(localStorage.getItem('token')).name} readOnly/>
                    </div>
                   </div>
-                  <code>If you want to change something like name/username or password, please use users table.</code>
               </Modal.Body>
         </Modal>
           </nav>

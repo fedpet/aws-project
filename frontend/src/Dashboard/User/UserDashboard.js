@@ -1,35 +1,78 @@
-import React from 'react';
-import { useState, useEffect } from "react";
-import PieChart from '../../components/PieChart'
-import LineChart from '../../components/LineChart'
-import './UserDashboard.scss';
+import React, { Component } from 'react';
 
+//Navigation
+import Sidebar from '../Admin/components/Navigation/Sidebar';
+import Topbar from '../Admin/components/Navigation/Topbar';
+import PageHeading from '../Admin/components/PageHeading';
+import WasteDeliveredList from './components/WasteDeliveredList';
 
-export default function Dashboard() {
+//Redux
+import { Provider } from 'react-redux';
+import { Store } from '../../redux/store';
 
-  const [chartData, setChartData] = useState([
-      { type: 'paper',  total: 3 },
-      { type: 'plastic', total: 4 },
-  ]);
+class Dashboard extends Component {
 
-  const logout = () => {
-      localStorage.clear();
-      window.location.href = "/";
-  };
+  render() {
+    return (
+    <Provider store={Store}>
+      <div>
+        {/* <!-- Page Wrapper --> */}
+        <div id="wrapper">
 
-  useEffect(() => {
-    fetch("/api/waste?groupByType=true&includeDataPoints=true")
-        .then(response => response.json())
-        .then(json => setChartData(json));
-  }, []);
+          {/* <!-- Content Wrapper --> */}
+          <div id="content-wrapper" className="d-flex flex-column">
 
-  return(
-    <div className="dashboard">
-      <button onClick={logout}>Logout</button>
-      <header className="App-header">
-        <PieChart title="Waste" data={chartData}/>
-        <LineChart title="Waste" data={chartData}/>
-      </header>
-    </div>
-  );
+            {/* <!-- Main Content --> */}
+            <div id="content">
+
+              {/* <!-- Topbar --> */}
+              <Topbar />
+              {/* <!-- End of Topbar --> */}
+
+              {/* <!-- Begin Page Content --> */}
+              <div className="container-fluid">
+
+                <PageHeading title="Statistics" />
+
+                {/* <!-- Start statistics --> */}
+
+                {/* <!-- End statistics --> */}
+
+                {/* <!-- Page Heading --> */}
+                <PageHeading title="List of waste delivered" />
+                    <WasteDeliveredList />
+                {/* <!-- Start User List --> */}
+
+                {/* <!-- End User List --> */}
+              </div>
+              {/* <!-- /.container-fluid --> */}
+
+            </div>
+            {/* <!-- End of Main Content --> */}
+
+            {/* <!-- Footer --> */}
+            <footer className="sticky-footer bg-white">
+              <div className="container my-auto">
+                <div className="copyright text-center my-auto">
+                  <span>Copyright &copy; aws-project 2021</span>
+                </div>
+              </div>
+            </footer>
+            {/* <!-- End of Footer --> */}
+
+          </div>
+          {/* <!-- End of Content Wrapper --> */}
+
+        </div>
+        {/* <!-- End of Page Wrapper --> */}
+
+        {/* <!-- Scroll to Top Button--> */}
+        <a className="scroll-to-top rounded" href="#page-top">
+          <i className="fas fa-angle-up"></i>
+        </a></div>
+       </Provider>
+    )
+  }
 }
+
+export default Dashboard;
