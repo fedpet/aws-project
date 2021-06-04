@@ -6,9 +6,11 @@ import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
 
 class Statistics extends Component {
-    state = {chartData: []}
-    componentDidMount() {
-       fetch("/api/waste?groupByType=true&includeDataPoints=true")
+    state = {
+        chartData: []
+    }
+    componentDidMount(event,picker) {
+       fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment().subtract(60, 'days').format('YYYY-MM-DD')+"&to="+moment().format('YYYY-MM-DD'))
        .then(response => response.json())
        .then(json => {
            this.setState({chartData: json})
@@ -19,9 +21,7 @@ class Statistics extends Component {
        fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
        .then(response => response.json())
        .then(json => {
-           if(json.length > 0) {
-               this.setState({chartData: json})
-           }
+           this.setState({chartData: json})
        });
   }
 
@@ -30,7 +30,7 @@ class Statistics extends Component {
         <div>
           <div className="d-inline-flex p-2">
               <DateRangePicker
-                  initialSettings={{ startDate: '01/05/2021', endDate: '01/06/2021' }}
+                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment() }}
                   onApply={this.handleFilterChartsByDate.bind(this)}
                 >
                   <input type="text" className="form-control" />
