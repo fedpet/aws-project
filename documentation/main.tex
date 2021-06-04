@@ -1,11 +1,14 @@
 \documentclass{report}
-\usepackage[italian]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
 \usepackage{graphicx}
-\usepackage{cleveref}
+\usepackage[italian]{cleveref}
+\usepackage[italian]{babel}
+\usepackage{subfigure}
+\usepackage{wrapfig}
 \usepackage{dirtree}
 \usepackage{xcolor}
+\usepackage[section]{placeins} % figures before next section
 
 \definecolor{codegray}{gray}{0.925}
 \newcommand{\code}[1]{\colorbox{codegray}{\texttt{\detokenize{#1}}}}
@@ -67,7 +70,15 @@ una flag per sapere se è stata letta, ed il tipo e quantità per i conferimenti
 \end{figure}
 
 \subsection{Interfaccia utente}
-TODO. Mockup....
+Per il design dell'interfaccia utente è stato inizialmente sviluppato il mockup raffigurato in \Cref{fig:mockup}, che si è
+man mano evoluto a seguito dei test di usabilità effettuati. E' stata prediletta la semplicità e l'immediatezza.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{mockup}
+    \caption{Mockup interfaccia utente}
+    \label{fig:mockup}
+\end{figure}
 
 \section{Tecnologie}
 Il progetto utilizza le seguenti tecnologie:
@@ -77,7 +88,7 @@ Il progetto utilizza le seguenti tecnologie:
     \item nginx - utilizzato come reverse proxy
     \item MongoDB - database non relazionale di documenti
     \item Node - come server web sia per frontend e backend
-    \item Express - libreria per gestire chiamate e route HTTP
+    \item Express - framework per gestire chiamate e routes HTTP
     \item Mongoose - come libreria di object modeling per mongodb
     \item Mocha e Supertest - per testing automatizzato nel backend
     \item mongodb-memory-server - per utilizzare un database mongodb in memoria, in modo da velocizzare l'esecuzione dei test
@@ -87,10 +98,12 @@ Il progetto utilizza le seguenti tecnologie:
     per velocizzarne lo sviluppo e debugging
     \item React - framework per frontend
     \item SCSS - libreria pre-processore di CSS per facilitarne il riuso
+    \item Bootstrap - framework per CSS
 \end{itemize}
 
-\section{Codice}
-Solo aspetti rilevanti.
+%\section{Codice}
+%Solo aspetti rilevanti.
+%TODO: ????????????
 
 \section{Test}
 \subsection{Codice}
