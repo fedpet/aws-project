@@ -21,7 +21,7 @@ class Dashboard extends Component {
         <div id="wrapper">
 
           {/* <!-- Sidebar --> */}
-          <Sidebar />
+          { /* <Sidebar /> */}
           {/* <!-- End of Sidebar --> */}
 
           {/* <!-- Content Wrapper --> */}
