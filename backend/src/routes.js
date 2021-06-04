@@ -4,7 +4,7 @@ const { auth, guard, createToken } = require('./auth')
 const { CastError } = require('mongoose')
 
 const account = require('./controllers/account')(createToken)
-const notification = require('./controllers/notificationController')
+const notification = require('./controllers/notification')
 const waste = require('./controllers/waste')
 const cost = require('./controllers/cost')
 
@@ -19,11 +19,8 @@ router.delete('/account/:account', guard.check('admin'), account.delete)
 router.post('/waste', waste.delivery)
 router.get('/waste', waste.query)
 router.get('/account/:account/cost', cost.calculate)
-router.get('/account/:account/notifications', notification.getNotifications)
-router.get('/account/:account/notifications/:start_data/:end_data')
-router.route('/account/:account/notifications/:notification_id')
-    .get(notification.getNotificationById)
-    .post(notification.markAsRead)
+router.get('/notifications', notification.query)
+router.patch('/notifications/:notification', notification.markAsRead)
 
 router.use((err, req, res, next) => {
     if(err instanceof CastError || err.name === 'ValidationError') {

@@ -1,18 +1,30 @@
 const Waste = require('../models/waste')
 const Account = require('../models/account')
+const Notification = require('../models/notification')
 
 module.exports = {
     delivery(req, res, next) {
         Account.findById(req.body.account).exec()
-            .then(
-                acct => new Waste({
+            .then( acct => {
+                let data = {
                     account: acct.id,
                     quantity: req.body.quantity,
                     type: req.body.type
-                }).save()
-            )
+                }
+                if (req.body.date) {
+                    data.date = new Date(req.body.date)
+                }
+                return new Waste(data).save()
+            })
             .then(
-                doc => res.status(201).json(doc),
+                waste => {
+                    new Notification({
+                        account: waste.account,
+                        date: waste.date,
+                        message:`Delivered ${waste.quantity} Kg of ${waste.type}`
+                    }).save()
+                    res.status(201).json(waste)
+                },
                 err => next(err)
             )
     },
@@ -51,14 +63,7 @@ module.exports = {
             if(Object.keys(match).length > 0) {
                 pipeline.unshift({ $match: match })
             }
-            q = Waste.aggregate(pipeline).then(result => {
-                const sum = result.reduce((a,b) => a.total + b.total)
-                result.map(r => {
-                    r.percentage = r.total / sum
-                    return r
-                })
-                return result
-            })
+            q = Waste.aggregate(pipeline)
         } else {
             q = Waste.find()
             if (req.query.account) {
