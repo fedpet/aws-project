@@ -84,6 +84,19 @@ describe('Waste querying system', () => {
                 ])
             })
     )
+    it('should allow grouping and filtering by date and account', () =>
+        request(app)
+            .get('/waste?groupByType=true&includeDataPoints=true&from=2021-06-02&to=2021-06-03&account=' + a2.id)
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .expect(res => {
+                expect(res.body).toStrictEqual([{
+                    type: 'plastic',
+                    total: 2,
+                    data:[{ date:new Date('2021-06-03').toISOString(), quantity:1 }]
+                }])
+            })
+    )
     it('should work with a specific account', () =>
         request(app)
             .get('/waste?account=' + a2.id)
