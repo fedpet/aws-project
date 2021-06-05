@@ -23,7 +23,7 @@ describe('Waste cost calculator', () => {
     })
     it('should calculate monthly cost correctly', () =>
         request(app)
-            .get('/account/' + acct.id + '/cost?month=6')
+            .get('/account/' + acct.id + '/cost?year=2021&month=6')
             .set('Authorization', `Bearer ${token}`)
             .expect(200)
             .expect('Content-Type', /json/)
