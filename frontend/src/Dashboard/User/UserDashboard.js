@@ -5,7 +5,7 @@ import Sidebar from '../Admin/components/Navigation/Sidebar';
 import Topbar from '../Admin/components/Navigation/Topbar';
 import PageHeading from '../Admin/components/PageHeading';
 import WasteDeliveredList from './components/WasteDeliveredList';
-
+import CostCalculator from './components/CostCalculator';
 //Redux
 import { Provider } from 'react-redux';
 import { Store } from '../../redux/store';
@@ -32,6 +32,9 @@ class Dashboard extends Component {
               {/* <!-- Begin Page Content --> */}
               <div className="container-fluid">
 
+                {/* Start cost calculator*/}
+                    <CostCalculator />
+                {/* End cost calculator*/}
                 <PageHeading title="Statistics" />
 
                 {/* <!-- Start statistics --> */}

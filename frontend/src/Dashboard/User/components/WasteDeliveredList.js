@@ -13,6 +13,7 @@ import ToastHeader from 'react-bootstrap/ToastHeader';
 import ToastBody from 'react-bootstrap/ToastBody';
 import moment from 'moment';
 
+
 class WasteDeliveredList extends Component {
     state = {
         wastes: [],
@@ -170,7 +171,7 @@ class WasteDeliveredList extends Component {
                     <BootstrapTable
                      striped
                      hover
-                     keyField='id'
+                     keyField='_id'
                      wrapperClasses="table-responsive"
                      bordered={false}
                      data={ this.state.wastes }
@@ -193,8 +194,8 @@ class WasteDeliveredList extends Component {
                           </div>
                           <div className="form-group">
                             <label htmlFor="WasteType">Type</label>
-                            <select className="form-control" name="type" onChange={this.handleChange} id="WasteType" required>
-                              <option value="" selected disabled hidden>Select waste type</option>
+                            <select className="form-control" name="type" defaultValue={'DEFAULT'} onChange={this.handleChange} id="WasteType" required>
+                              <option value="DEFAULT" disabled hidden>Select waste type</option>
                               <option>plastic</option>
                               <option>paper</option>
                               <option>glass</option>
