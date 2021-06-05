@@ -6,6 +6,7 @@ import Topbar from '../Admin/components/Navigation/Topbar';
 import PageHeading from '../Admin/components/PageHeading';
 import WasteDeliveredList from './components/WasteDeliveredList';
 import CostCalculator from './components/CostCalculator';
+import Statistics from './components/Statistics';
 //Redux
 import { Provider } from 'react-redux';
 import { Store } from '../../redux/store';
@@ -36,9 +37,8 @@ class Dashboard extends Component {
                     <CostCalculator />
                 {/* End cost calculator*/}
                 <PageHeading title="Statistics" />
-
                 {/* <!-- Start statistics --> */}
-
+                    <Statistics />
                 {/* <!-- End statistics --> */}
 
                 {/* <!-- Page Heading --> */}
