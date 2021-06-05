@@ -7,17 +7,13 @@ import Container from 'react-bootstrap/Container'
 class CostCalculator extends Component {
     state = {
         startDate: new Date(),
-        totalCost: '',
-        currency: '',
-        result: ''
+   }
 
-    }
-
-    calculateCost () {
-       var month = this.state.startDate.getMonth();
-       var year = this.state.startDate.getFullYear();
+    calculateCost (date) {
+       var month = date.getMonth() + 1;
+       var year = date.getFullYear();
        var accountId = JSON.parse(localStorage.getItem('token')).id;
-      fetch("/api/account/" +accountId + "/cost?month="+month, {
+      fetch("/api/account/" +accountId + "/cost?month="+month+"&year="+year, {
            method: 'GET',
            withCredentials: true,
            credentials: 'include',
@@ -41,13 +37,8 @@ class CostCalculator extends Component {
                   selected={this.state.startDate}
                   dateFormat="MM/yyyy"
                   showMonthYearPicker
-                  onChange= {
-                    (date) => this.setState({startDate: date})
-                  }
+                  onChange= {(date) => this.calculateCost(date)}
                 />
-            </div>
-            <div className="col">
-                <button onClick={this.calculateCost.bind(this)} className="btn btn-primary">Calculate</button>
             </div>
             <div className="col">
                 <div className="form-group">

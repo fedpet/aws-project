@@ -11,29 +11,28 @@ class Statistics extends Component {
     }
     componentDidMount(event,picker) {
        var accountId = JSON.parse(localStorage.getItem('token')).id;
-       fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment().subtract(60, 'days').format('YYYY-MM-DD')+"&to="+moment().format('YYYY-MM-DD'))
+       fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment().subtract(5, 'days').format('YYYY-MM-DD')+"&to="+moment().add(1,'days').format('YYYY-MM-DD'))
        .then(response => response.json())
        .then(json => {
-           console.warn("chart data " + json)
            this.setState({chartData: json})
        });
     }
 
-  handleFilterChartsByDate(event, picker) {
-        var accountId = JSON.parse(localStorage.getItem('token')).id;
-       fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
-       .then(response => response.json())
-       .then(json => {
-           this.setState({chartData: json})
-       });
-  }
+      handleFilterChartsByDate(event, picker) {
+            var accountId = JSON.parse(localStorage.getItem('token')).id;
+           fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
+           .then(response => response.json())
+           .then(json => {
+               this.setState({chartData: json})
+           });
+      }
 
   render() {
     return(
         <div>
           <div className="d-inline-flex p-2">
               <DateRangePicker
-                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment() }}
+                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment().add(1,'days') }}
                   onApply={this.handleFilterChartsByDate.bind(this)}
                 >
                   <input type="text" className="form-control" />

@@ -13,7 +13,6 @@ import ToastHeader from 'react-bootstrap/ToastHeader';
 import ToastBody from 'react-bootstrap/ToastBody';
 import moment from 'moment';
 
-
 class WasteDeliveredList extends Component {
     state = {
         wastes: [],
