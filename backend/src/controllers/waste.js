@@ -1,6 +1,7 @@
 const Waste = require('../models/waste')
 const Account = require('../models/account')
 const Notification = require('../models/notification')
+const ObjectId = require('mongoose').Types.ObjectId
 
 module.exports = {
     delivery(req, res, next) {
@@ -51,7 +52,7 @@ module.exports = {
             }
             let match = { }
             if (req.query.account) {
-                match.account = req.query.account
+                match.account = ObjectId(req.query.account)
             }
             if (req.query.from) {
                 match.date = { $gte: new Date(req.query.from) }
@@ -67,7 +68,7 @@ module.exports = {
         } else {
             q = Waste.find()
             if (req.query.account) {
-                q.where('account', req.query.account)
+                q.where('account', ObjectId(req.query.account))
             }
             if (req.query.from) {
                 q.where('date').gte(new Date(req.query.from))
