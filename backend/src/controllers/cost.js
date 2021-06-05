@@ -16,7 +16,10 @@ module.exports = {
             res.status(401)
             return;
         }
-        const dateFrom = moment().month(req.query.month-1).startOf('month')
+        const dateFrom = moment()
+            .year(req.query.year)
+            .month(req.query.month-1)
+            .startOf('month')
         const dateTo = dateFrom.clone().endOf('month')
         Account.findById(req.params.account).exec()
             .then(acct => Waste.aggregate([
