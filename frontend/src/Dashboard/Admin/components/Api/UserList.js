@@ -71,7 +71,7 @@ class UserList extends Component {
             this.setState({users: json})
         }).catch((error) => {
           alert("some error: " + error);
-       });;
+       });
     }
 
 

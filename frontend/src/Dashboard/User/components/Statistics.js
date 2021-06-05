@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PieChart from './components/PieChart'
-import LineChart from './components/LineChart'
+import PieChart from '../../../components/PieChart'
+import LineChart from '../../../components/LineChart'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
@@ -10,27 +10,29 @@ class Statistics extends Component {
         chartData: []
     }
     componentDidMount(event,picker) {
-       fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment().subtract(60, 'days').format('YYYY-MM-DD')+"&to="+moment().add(1,'days').format('YYYY-MM-DD'))
+       var accountId = JSON.parse(localStorage.getItem('token')).id;
+       fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment().subtract(5, 'days').format('YYYY-MM-DD')+"&to="+moment().add(1,'days').format('YYYY-MM-DD'))
        .then(response => response.json())
        .then(json => {
            this.setState({chartData: json})
        });
     }
 
-  handleFilterChartsByDate(event, picker) {
-       fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
-       .then(response => response.json())
-       .then(json => {
-           this.setState({chartData: json})
-       });
-  }
+      handleFilterChartsByDate(event, picker) {
+            var accountId = JSON.parse(localStorage.getItem('token')).id;
+           fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
+           .then(response => response.json())
+           .then(json => {
+               this.setState({chartData: json})
+           });
+      }
 
   render() {
     return(
         <div>
           <div className="d-inline-flex p-2">
               <DateRangePicker
-                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment().add(1, 'days') }}
+                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment().add(1,'days') }}
                   onApply={this.handleFilterChartsByDate.bind(this)}
                 >
                   <input type="text" className="form-control" />
