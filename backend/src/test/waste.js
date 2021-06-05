@@ -93,7 +93,7 @@ describe('Waste querying system', () => {
                 expect(res.body).toStrictEqual([{
                     type: 'plastic',
                     total: 2,
-                    data:[{ date:new Date('2021-06-03').toISOString(), quantity:1 }]
+                    data:[{ date:new Date('2021-06-02').toISOString(), quantity:2 }]
                 }])
             })
     )
