@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PieChart from '../../../components/PieChart'
 import LineChart from '../../../components/LineChart'
-import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
-import moment from 'moment';
-import CostCalculator from "./CostCalculator"
+
 
 class Statistics extends Component {
     constructor(props) {
