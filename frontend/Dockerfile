@@ -7,8 +7,6 @@ WORKDIR /app
 COPY . ./
 
 # Install dependencies
-RUN npm install # --production
-#RUN apk --no-cache add curl
+RUN npm install --production
 
-# Run our app.
 CMD ["npm", "start"]
