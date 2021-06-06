@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import { useState, useEffect } from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import { Modal, Button } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Toast from 'react-bootstrap/Toast';
-import ToastHeader from 'react-bootstrap/ToastHeader';
-import ToastBody from 'react-bootstrap/ToastBody';
 import moment from 'moment';
 
 class WasteDeliveredList extends Component {
@@ -121,28 +115,6 @@ class WasteDeliveredList extends Component {
     }
 
 
-    makeDelivery = () => {
-       if(this.state.waste.length < 2) {
-          alert("All fields are required!")
-          return;
-      }
-      this.closeDeliveryModal();
-      confirmAlert({
-          title: 'Confirm to make waster Delivery',
-          message: 'Are you sure to do this?',
-          buttons: [
-              {
-                  label: 'Yes',
-                  onClick: () => {this.handleDeliveryWaste()}
-              },
-              {
-                  label: 'No',
-                  onClick: () => {this.closeDeliveryModal()}
-              }
-          ]
-      });
-    }
-
     render() {
           const pagination = {
              page: 1,
@@ -163,9 +135,6 @@ class WasteDeliveredList extends Component {
           };
         return (
             <div className="card shadow mb-4">
-              <div className="card-header">
-                    <button onClick={this.openDeliveryModal} className="btn btn-primary">Make delivery</button>
-               </div>
               <div className="card-body">
                     <BootstrapTable
                      striped
@@ -180,32 +149,6 @@ class WasteDeliveredList extends Component {
                      />
                 </div>
 
-                 {/*Make delivery modal*/}
-                  <Modal show={this.state.deliveryModalIsOpen} onHide={this.closeDeliveryModal}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Make waste Delivery</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="modal-body">
-                          <div className="form-group">
-                            <label htmlFor="WasteQuantity">Quantity</label>
-                            <input type="number" className="form-control" id="WasteQuantity" name="quantity" onChange={this.handleChange}  required />
-                          </div>
-                          <div className="form-group">
-                            <label htmlFor="WasteType">Type</label>
-                            <select className="form-control" name="type" defaultValue={'DEFAULT'} onChange={this.handleChange} id="WasteType" required>
-                              <option value="DEFAULT" disabled hidden>Select waste type</option>
-                              <option>plastic</option>
-                              <option>paper</option>
-                              <option>glass</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="modal-footer border-top-0 d-flex justify-content-center">
-                          <button type="submit" onClick={this.makeDelivery} className="btn btn-success">Make Delivery</button>
-                        </div>
-                    </Modal.Body>
-                  </Modal>
                   {/*Toogle for message*/}
                   <div
                     aria-live="polite"

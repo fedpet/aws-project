@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
-import { useState, useEffect } from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Toast from 'react-bootstrap/Toast';
-import ToastHeader from 'react-bootstrap/ToastHeader';
-import ToastBody from 'react-bootstrap/ToastBody';
 
 class UserList extends Component {
   state = {

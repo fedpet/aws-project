@@ -58,12 +58,6 @@ export default function Login({setToken}) {
                             <div className="form-group">
                               <input type="password" className="form-control form-control-user" id="InputPassword" placeholder="Password" onChange={e => setPassword(e.target.value)} required/>
                             </div>
-                            <div className="form-group">
-                              <div className="custom-control custom-checkbox small">
-                                <input type="checkbox" className="custom-control-input" id="customCheck"/>
-                                <label className="custom-control-label" htmlFor="customCheck">Remember Me</label>
-                              </div>
-                            </div>
                             <button  type="submit" className="btn btn-primary btn-user btn-block">
                               Login
                             </button>
