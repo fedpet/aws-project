@@ -8,6 +8,16 @@ import CostCalculator from './components/CostCalculator';
 import Statistics from './components/Statistics';
 
 class Dashboard extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            chartData: []
+        }
+    }
+    
+   updateChartData(data) {
+        this.setState({ chartData: data});
+   }
 
   render() {
     return (
@@ -29,11 +39,11 @@ class Dashboard extends Component {
               <div className="container-fluid">
 
                 {/* Start cost calculator*/}
-                    <CostCalculator />
+                    <CostCalculator makeUpdateChartData= {this.updateChartData.bind(this)}/>
                 {/* End cost calculator*/}
                 <PageHeading title="Statistics" />
                 {/* <!-- Start statistics --> */}
-                    <Statistics />
+                    <Statistics receiveChartData={this.state.chartData} />
                 {/* <!-- End statistics --> */}
 
                 {/* <!-- Page Heading --> */}

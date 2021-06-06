@@ -4,41 +4,30 @@ import LineChart from '../../../components/LineChart'
 import DateRangePicker from 'react-bootstrap-daterangepicker';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import moment from 'moment';
+import CostCalculator from "./CostCalculator"
 
 class Statistics extends Component {
-    state = {
-        chartData: []
-    }
-    componentDidMount(event,picker) {
-       var accountId = JSON.parse(localStorage.getItem('token')).id;
-       fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment().subtract(5, 'days').format('YYYY-MM-DD')+"&to="+moment().add(1,'days').format('YYYY-MM-DD'))
-       .then(response => response.json())
-       .then(json => {
-           this.setState({chartData: json})
-       });
+    constructor(props) {
+        super(props);
+        this.state = {
+            chartData: []
+        }
+        this.updateChartData = this.updateChartData.bind(this);
     }
 
-      handleFilterChartsByDate(event, picker) {
-            var accountId = JSON.parse(localStorage.getItem('token')).id;
-           fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
-           .then(response => response.json())
-           .then(json => {
-               this.setState({chartData: json})
-           });
-      }
+    updateChartData(data) {
+        this.setState({chartData: data})
+    }
+    
+    UNSAFE_componentWillReceiveProps(props) {
+        if(this.state.chartData !== props.receiveChartData) {
+            this.setState({chartData: props.receiveChartData})
+        }
+    }
 
   render() {
     return(
         <div>
-          <div className="d-inline-flex p-2">
-              <DateRangePicker
-                  initialSettings={{ startDate: moment().subtract(60, 'days'), endDate: moment().add(1,'days') }}
-                  onApply={this.handleFilterChartsByDate.bind(this)}
-                >
-                  <input type="text" className="form-control" />
-              </DateRangePicker>
-          </div>
-
             <div className="row">
               <div className="col-xl-8 col-lg-7">
                   <div className="card shadow mb-4">
