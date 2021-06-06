@@ -56,7 +56,7 @@ class NotificationsManager extends React.Component {
         let notifications = this.state.notifications
         let unreadCount = notifications.filter(n => !n.read).length
         return <li className="nav-item dropdown no-arrow mx-1">
-            <a className="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={this.onToggle}>
+            <a className="nav-link dropdown-toggle" href={() => false} id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={this.onToggle}>
                 <i className="fas fa-bell fa-fw"></i>
                 {unreadCount > 0 ? <span className="badge badge-danger badge-counter">{unreadCount}</span> : ''}
             </a>
@@ -64,7 +64,7 @@ class NotificationsManager extends React.Component {
                 <h6 className="dropdown-header">Notifications Center</h6>
             {notifications.map(notification => {
                 return (
-                    <a className="dropdown-item d-flex align-items-center" key={notification._id} href="#">
+                    <a className="dropdown-item d-flex align-items-center" key={notification._id} href={() => false}>
                         <div className="mr-3">
                             <div className="icon-circle bg-primary">
                                 <i className="fas fa-file-alt text-white"></i>
@@ -79,7 +79,6 @@ class NotificationsManager extends React.Component {
             })}
             { notifications.length <= 0 ? <div className="dropdown-item text-center small text-gray-500">There are no notifications for you</div> : '' }
                 <div className="dropdown-item text-center small text-gray-500"></div>
-                {/*<a className="dropdown-item text-center small text-gray-500" href="#">Show All Notifications</a>*/}
             </div>
         </li>;
     }

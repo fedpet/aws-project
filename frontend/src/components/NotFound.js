@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import Topbar from '../components/Navigation/Topbar';
-import PageHeading from '../components/PageHeading';
+import { withRouter } from 'react-router-dom';
 
 class NotFound extends Component {
     render() {
