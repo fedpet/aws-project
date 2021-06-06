@@ -21,8 +21,8 @@ services:
       - frontend-backend
     environment:
       PORT: 80
-    volumes:
-      - ./frontend/src:/app/src # allow live-debugging
+    #volumes:
+    #  - ./frontend/src:/app/src # allow live-debugging
 
   backend:
     restart: always
@@ -35,8 +35,8 @@ services:
     environment:
       PORT: 80
       DB_CONNECTION: mongodb://database:27017/aws
-    volumes:
-      - ./backend/src:/app/src # allow live-debugging
+    #volumes:
+    #  - ./backend/src:/app/src # allow live-debugging
 
   database:
     restart: always
