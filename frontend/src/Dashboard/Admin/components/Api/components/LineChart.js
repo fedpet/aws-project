@@ -1,6 +1,8 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import NoDataToDisplay from 'highcharts/modules/no-data-to-display'
+NoDataToDisplay(Highcharts)
 
 function capitalized(str) {
     return str.charAt(0).toUpperCase() + str.substring(1)
