@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
-
-
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { clickMenuOpen } from '../../../../../redux/actions';
-import { Modal, Button } from "react-bootstrap";
-import NotificationsManager from "../../../../../components/NotificationsManager";
+import { Modal } from "react-bootstrap";
+import NotificationsManager from "../../../components/NotificationsManager";
 
 class Topbar extends Component {
     state = {
@@ -16,7 +11,6 @@ class Topbar extends Component {
     closeModal = () => this.setState({ isOpen: false });
 
     render() {
-      const { clickMenuOpen } = this.props;
 
       const logout = () => {
           localStorage.clear();
@@ -90,12 +84,4 @@ class Topbar extends Component {
     }
 }
 
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ clickMenuOpen }, dispatch);
-
-const mapStateToProps = store => ({
-  toggled: store.menuState.menuOpen
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Topbar);
+export default Topbar;

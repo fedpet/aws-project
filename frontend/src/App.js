@@ -1,15 +1,11 @@
-import logo from './logo.svg';
 import './App.scss';
-import { useState, useEffect } from "react";
 import { Redirect } from 'react-router';
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import PieChart from './components/PieChart'
-import LineChart from './components/LineChart'
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./login/Login";
 import UserDashboard from './Dashboard/User/UserDashboard';
 import AdminDashboard from './Dashboard/Admin/AdminDashboard';
 import useToken from "./login/useToken";
-
+import NotFound from "./components/NotFound"
 
 function App() {
   const { token, setToken } = useToken();
@@ -19,7 +15,7 @@ function App() {
   }
   const role = JSON.parse(localStorage.getItem('token')).role ;
 
-  if(role == 'admin') {
+  if(role === 'admin') {
       return (
           <BrowserRouter>
             <Switch>
@@ -29,28 +25,24 @@ function App() {
               <Route exact path="/admin">
                 <AdminDashboard />
               </Route>
+              <Route path="*" component={NotFound} />
             </Switch>
           </BrowserRouter>
         )
   } else if(role === 'user'){
       return (
-        <div className="wrapper">
           <BrowserRouter>
             <Switch>
-              <Route path="/">
+              <Route exact path="/">
+                 <Redirect to="/dashboard" />
+              </Route>
+              <Route exact path="/dashboard">
                 <UserDashboard />
               </Route>
-              <Route path="/dashboard">
-                <UserDashboard />
-              </Route>
+              <Route path="*" component={NotFound} />
             </Switch>
           </BrowserRouter>
-        </div>
       )
-  } else {
-    return (
-       <h1>make something </h1>
-    )
   }
 }
 

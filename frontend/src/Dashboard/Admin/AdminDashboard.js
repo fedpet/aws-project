@@ -1,28 +1,18 @@
 import React, { Component } from 'react';
 
 //Navigation
-import Sidebar from './components/Navigation/Sidebar';
-import Topbar from './components/Navigation/Topbar';
-import PageHeading from './components/PageHeading';
+import Topbar from '../../components/Navigation/Topbar';
+import PageHeading from '../../components/PageHeading';
 import Users from './components/Api/UserList';
 import Statistics from './components/Api/Statistics';
-
-//Redux
-import { Provider } from 'react-redux';
-import { Store } from '../../redux/store';
 
 class Dashboard extends Component {
 
   render() {
     return (
-    <Provider store={Store}>
       <div>
         {/* <!-- Page Wrapper --> */}
         <div id="wrapper">
-
-          {/* <!-- Sidebar --> */}
-          { /* <Sidebar /> */}
-          {/* <!-- End of Sidebar --> */}
 
           {/* <!-- Content Wrapper --> */}
           <div id="content-wrapper" className="d-flex flex-column">
@@ -75,7 +65,6 @@ class Dashboard extends Component {
         <a className="scroll-to-top rounded" href="#page-top">
           <i className="fas fa-angle-up"></i>
         </a></div>
-       </Provider>
     )
   }
 }

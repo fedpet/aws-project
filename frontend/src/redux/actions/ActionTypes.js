@@ -1,1 +1,0 @@
-export const CLICK_OPEN_MENU = 'CLICK_OPEN_MENU';
