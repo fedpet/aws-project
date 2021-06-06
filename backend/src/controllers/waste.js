@@ -1,18 +1,31 @@
 const Waste = require('../models/waste')
 const Account = require('../models/account')
+const Notification = require('../models/notification')
+const ObjectId = require('mongoose').Types.ObjectId
 
 module.exports = {
     delivery(req, res, next) {
         Account.findById(req.body.account).exec()
-            .then(
-                acct => new Waste({
+            .then( acct => {
+                let data = {
                     account: acct.id,
                     quantity: req.body.quantity,
                     type: req.body.type
-                }).save()
-            )
+                }
+                if (req.body.date) {
+                    data.date = new Date(req.body.date)
+                }
+                return new Waste(data).save()
+            })
             .then(
-                doc => res.status(201).json(doc),
+                waste => {
+                    new Notification({
+                        account: waste.account,
+                        date: waste.date,
+                        message:`Delivered ${waste.quantity} Kg of ${waste.type}`
+                    }).save()
+                    res.status(201).json(waste)
+                },
                 err => next(err)
             )
     },
@@ -37,25 +50,32 @@ module.exports = {
                 pipeline[0].$group.data = { $push:  { date: "$date", quantity: "$quantity" } }
                 pipeline[1].$project.data = 1
             }
-            q = Waste.aggregate(pipeline).then(result => {
-                const sum = result.reduce((a,b) => a.total + b.total)
-                result.map(r => {
-                    r.percentage = r.total / sum
-                    return r
-                })
-                return result
-            })
+            let match = { }
+            if (req.query.account) {
+                match.account = ObjectId(req.query.account)
+            }
+            if (req.query.from) {
+                match.date = { $gte: new Date(req.query.from) }
+            }
+            if (req.query.to) {
+                match.date = match.date || {}
+                match.date.$lte = new Date(req.query.to)
+            }
+            if(Object.keys(match).length > 0) {
+                pipeline.unshift({ $match: match })
+            }
+            q = Waste.aggregate(pipeline)
         } else {
             q = Waste.find()
-        }
-        if (req.query.account) {
-            q.where('account', req.query.account)
-        }
-        if (req.query.from) {
-            q.where('date').gte(new Date(req.query.from))
-        }
-        if (req.query.to) {
-            q.where('date').lte(new Date(req.query.to))
+            if (req.query.account) {
+                q.where('account', ObjectId(req.query.account))
+            }
+            if (req.query.from) {
+                q.where('date').gte(new Date(req.query.from))
+            }
+            if (req.query.to) {
+                q.where('date').lte(new Date(req.query.to))
+            }
         }
         q.then(
             result => res.status(200).json(result),

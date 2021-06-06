@@ -9,7 +9,7 @@ describe('Waste cost calculator', () => {
     let acct = null
     let token = null
     beforeEach(async () => {
-        acct = await new Account({email:'test1', password:'test1', role:'user'}).save()
+        acct = await new Account({email:'test1', password:'test1', role:'user', name:'test'}).save()
         token = createToken(acct)
         await Waste.insertMany([
             { account: acct.id, type:'plastic', quantity:999, date: new Date('2021-05-31 23:59:59') },
@@ -23,7 +23,7 @@ describe('Waste cost calculator', () => {
     })
     it('should calculate monthly cost correctly', () =>
         request(app)
-            .get('/account/' + acct.id + '/cost?month=6')
+            .get('/account/' + acct.id + '/cost?year=2021&month=6')
             .set('Authorization', `Bearer ${token}`)
             .expect(200)
             .expect('Content-Type', /json/)

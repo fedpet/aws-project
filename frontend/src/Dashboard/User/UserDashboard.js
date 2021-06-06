@@ -1,35 +1,85 @@
-import React from 'react';
-import { useState, useEffect } from "react";
-import PieChart from '../../components/PieChart'
-import LineChart from '../../components/LineChart'
-import './UserDashboard.scss';
+import React, { Component } from 'react';
 
+//Navigation
+import Topbar from '../../components/Navigation/Topbar';
+import PageHeading from '../../components/PageHeading';
+import WasteDeliveredList from './components/WasteDeliveredList';
+import CostCalculator from './components/CostCalculator';
+import Statistics from './components/Statistics';
 
-export default function Dashboard() {
+class Dashboard extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            chartData: []
+        }
+    }
+    
+   updateChartData(data) {
+        this.setState({ chartData: data});
+   }
 
-  const [chartData, setChartData] = useState([
-      { type: 'paper',  total: 3 },
-      { type: 'plastic', total: 4 },
-  ]);
+  render() {
+    return (
+      <div>
+        {/* <!-- Page Wrapper --> */}
+        <div id="wrapper">
 
-  const logout = () => {
-      localStorage.clear();
-      window.location.href = "/";
-  };
+          {/* <!-- Content Wrapper --> */}
+          <div id="content-wrapper" className="d-flex flex-column">
 
-  useEffect(() => {
-    fetch("/api/waste?groupByType=true&includeDataPoints=true")
-        .then(response => response.json())
-        .then(json => setChartData(json));
-  }, []);
+            {/* <!-- Main Content --> */}
+            <div id="content">
 
-  return(
-    <div className="dashboard">
-      <button onClick={logout}>Logout</button>
-      <header className="App-header">
-        <PieChart title="Waste" data={chartData}/>
-        <LineChart title="Waste" data={chartData}/>
-      </header>
-    </div>
-  );
+              {/* <!-- Topbar --> */}
+              <Topbar />
+              {/* <!-- End of Topbar --> */}
+
+              {/* <!-- Begin Page Content --> */}
+              <div className="container-fluid">
+
+                {/* Start cost calculator*/}
+                    <CostCalculator makeUpdateChartData= {this.updateChartData.bind(this)}/>
+                {/* End cost calculator*/}
+                <PageHeading title="Statistics" />
+                {/* <!-- Start statistics --> */}
+                    <Statistics receiveChartData={this.state.chartData} />
+                {/* <!-- End statistics --> */}
+
+                {/* <!-- Page Heading --> */}
+                <PageHeading title="List of waste delivered" />
+                    <WasteDeliveredList />
+                {/* <!-- Start User List --> */}
+
+                {/* <!-- End User List --> */}
+              </div>
+              {/* <!-- /.container-fluid --> */}
+
+            </div>
+            {/* <!-- End of Main Content --> */}
+
+            {/* <!-- Footer --> */}
+            <footer className="sticky-footer bg-white">
+              <div className="container my-auto">
+                <div className="copyright text-center my-auto">
+                  <span>Copyright &copy; aws-project 2021</span>
+                </div>
+              </div>
+            </footer>
+            {/* <!-- End of Footer --> */}
+
+          </div>
+          {/* <!-- End of Content Wrapper --> */}
+
+        </div>
+        {/* <!-- End of Page Wrapper --> */}
+
+        {/* <!-- Scroll to Top Button--> */}
+        <a className="scroll-to-top rounded" href="#page-top">
+          <i className="fas fa-angle-up"></i>
+        </a></div>
+    )
+  }
 }
+
+export default Dashboard;
