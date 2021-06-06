@@ -56,15 +56,15 @@ class NotificationsManager extends React.Component {
         let notifications = this.state.notifications
         let unreadCount = notifications.filter(n => !n.read).length
         return <li className="nav-item dropdown no-arrow mx-1">
-            <a className="nav-link dropdown-toggle" href={() => false} id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={this.onToggle}>
+            <div className="nav-link dropdown-toggle" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={this.onToggle}>
                 <i className="fas fa-bell fa-fw"></i>
                 {unreadCount > 0 ? <span className="badge badge-danger badge-counter">{unreadCount}</span> : ''}
-            </a>
+            </div>
             <div className="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
                 <h6 className="dropdown-header">Notifications Center</h6>
             {notifications.map(notification => {
                 return (
-                    <a className="dropdown-item d-flex align-items-center" key={notification._id} href={() => false}>
+                    <div className="dropdown-item d-flex align-items-center" key={notification._id}>
                         <div className="mr-3">
                             <div className="icon-circle bg-primary">
                                 <i className="fas fa-file-alt text-white"></i>
@@ -74,7 +74,7 @@ class NotificationsManager extends React.Component {
                             <div className="small text-gray-500">{new Date(notification.date).toLocaleDateString()}</div>
                             {notification.read ? notification.message : <span className="font-weight-bold">{notification.message}</span>}
                         </div>
-                    </a>
+                    </div>
                 )
             })}
             { notifications.length <= 0 ? <div className="dropdown-item text-center small text-gray-500">There are no notifications for you</div> : '' }

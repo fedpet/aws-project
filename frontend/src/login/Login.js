@@ -45,10 +45,10 @@ export default function Login({setToken}) {
                       <div className="col-lg-6 d-none d-lg-block bg-login-image"></div>
                       <div className="col-lg-6">
                         <div className="p-5">
-                            <div class="text-center">
+                            <div className="text-center">
                                 <h1 className="h4 text-gray-900 mb-2">Welcome to MyWaste</h1>
                                 <p className="mb-4">Let's reuse whatever we have now, stop making more of it, take what we gather, and make - whether it's car parts, computer cases, anything that we can use.</p>
-                                <p><spam>Ian Somerhalder</spam></p>
+                                <p><span>Ian Somerhalder</span></p>
                             </div>
                             <hr/>
                           <form onSubmit={handleSubmit} className="user">

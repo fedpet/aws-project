@@ -52,17 +52,17 @@ class WasteDeliveredList extends Component {
 
     dataFormatter(cell,row) {
         return (
-            moment(cell).format('YYYY-MM-DD HH:mm:ss')
+            moment(cell).format('DD/MM/YYYY')
         )
     }
 
     totalCostColumn(cell,row) {
          if (row.type === "plastic") {
-            return (row.quantity * this.state.plasticCost) + " EUR";
+            return "€ " + (row.quantity * this.state.plasticCost).toFixed(2);
          } else if (row.type === "paper") {
-            return (row.quantity * this.state.paperCost) + " EUR";
+            return "€ " + (row.quantity * this.state.paperCost).toFixed(2);
          } else {
-            return (row.quantity * this.state.glassCost)  + " EUR";
+            return "€ " + (row.quantity * this.state.glassCost).toFixed(2);
          }
     }
 
