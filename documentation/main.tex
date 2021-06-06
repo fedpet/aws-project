@@ -9,6 +9,7 @@
 \usepackage{dirtree}
 \usepackage{xcolor}
 \usepackage[section]{placeins} % figures before next section
+\usepackage{listings}
 
 \definecolor{codegray}{gray}{0.925}
 \newcommand{\code}[1]{\colorbox{codegray}{\texttt{\detokenize{#1}}}}
@@ -143,8 +144,57 @@ TODO: descrivere migliorie
 Il progetto può essere scaricato con \code{git clone https://github.com/fedpet/aws-project.git} ed avviato con
 \code{docker compose up} nella sua cartella root. A questo punto basterà aprire localhost con un browser web per
 vederne l'interfaccia.
-%TODO: rilascio di immagini docker senza clonare la repo
 
+\section{Dashboard}
+Riportiamo in seguito alcuni estratti delle due dashboard.
+La prima pagina che si apre quando proviamo ad accedere al frontend è quello di login.
+Quando si inserisce lo username e la password, verrà caricato una dashboard in base al role.
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/login.PNG}  \end{center}
+    \caption{MyWaste: login page}
+    \label{fig: login}
+\end{figure}
+Qualora fossimo degli utenti standard avremo dunque:
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/userDashboard.PNG}  \end{center}
+    \caption{MyWaste: user dashboard}
+    \label{fig: userDashboard}
+\end{figure}
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/userProfile.PNG}  \end{center}
+    \caption{MyWaste: user profile}
+    \label{fig: userProfile}
+\end{figure}
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/notificheConferimento.PNG}  \end{center}
+    \caption{MyWaste: notifiche conferimento}
+    \label{fig: notify}
+\end{figure}
+Invece per gli utenti admin:
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/adminDashboard.PNG}  \end{center}
+    \caption{MyWaste admin: admin dashboard}
+    \label{fig: adminDashboard}
+\end{figure}
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/updateUserData.PNG}  \end{center}
+    \caption{MyWaste admin: user update}
+    \label{fig: userUpdate}
+\end{figure}
+\begin{figure}[h!]
+    \begin{center}
+        \includegraphics[width=1.0\textwidth]{images/addNewUser.PNG}  \end{center}
+    \caption{MyWaste admin: add new user}
+    \label{fig: addNewUser}
+\end{figure}
+
+%TODO: rilascio di immagini docker senza clonare la repo
 %\section{Conclusioni}
 %Conclusioni
 %TODO: conclusioni??
