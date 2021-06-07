@@ -111,6 +111,7 @@ una flag per sapere se è stata letta, ed il tipo e quantità per i conferimenti
 \subsection{Interfaccia utente}
 Per il design dell'interfaccia utente è stato inizialmente sviluppato il mockup raffigurato in \Cref{fig:mockup}, che si è
 man mano evoluto a seguito dei test di usabilità effettuati. E' stata prediletta la semplicità e l'immediatezza.
+Il progetto nasce mobile-first con interfaccia responsive per supportare anche schermi desktop.
 
 \begin{figure}[h!]
     \centering
@@ -141,32 +142,37 @@ Il progetto utilizza le seguenti tecnologie:
 \end{itemize}
 
 \section{Codice}
-\subsection{Backend code}
-\subsubsection{Api route}
-Per interagire con il backend bisogna effettuare le richieste alle API passando i parametri opportuni. Le api implementate sono:
+\subsection{Backend}
+Il backend è costituito da un servizio che espone API RESTful in formato JSON, ed è sviluppato con le tecnologie principali
+Node, Express e database MongoDB.
+\subsubsection{APIs}
+Le API implementate sono:
 \begin{itemize}
-    \item \textbf{Post /api/login }restituisce un json contente username,name,role e token se i paramentri username e password passati
+    \item \code{Post /login } Restituisce un json contente username,name,role e token JWT se i paramentri username e password passati
     nella fase di request risultano corretti.
-    \item \textbf{Get /me }restituisce le informazioni dell'utente loggato. La richiesta deve essere fatto usando un token valido.
-    \item \textbf{Get /account } restituisce la lista degli utenti registrati nella piattaforma. Questa api, può essre chiamato solo dagli utenti admin.
-    \item \textbf{Post /account } Permette di creare un nuovo utente. Un utente può essere creato solo da un utente admin.
-    \item \textbf{Patch /account/:account } Permette di aggiornare le informazioni di un utente esistente. Può essere chiamato solo da un utente admin.
-    \item \textbf{Delete /account/:account } Permette ad un utente admin di cancellare un utente dalla piattaforma.
-    \item \textbf{Post /waste } Quando un bisogna viene svuotato, viene chiamato questa api per completare il conferimento.
-    \item \textbf{Get /waste} Permette di effettuare delle query sulla tabella dei conferimenti, usando opportuni paramentri quali:
+    \item \code{Get /me } Restituisce le informazioni dell'utente loggato. La richiesta deve essere fatto usando un token valido.
+    \item \code{Get /account } Restituisce la lista degli utenti registrati nella piattaforma. Questa api, può essere chiamata solo dagli utenti admin.
+    \item \code{Post /account } Permette la creazione di nuovi account da parte di amministratori.
+    \item \code{Patch /account/:account } Permette agli amminstratori di aggiornare le informazioni di un account esistente dato il suo id.
+    \item \code{Delete /account/:account } Permette ad un amministratore di cancellare un account dalla piattaforma.
+    \item \code{Post /waste } API per registrare i dati relativi ad un conferimento, come tipo e peso dei rifiuti.
+    \item \code{Get /waste} Permette di effettuare query sui conferimenti, usando opportuni parametri quali:
         \begin{itemize}
-            \item \textbf{groupByType}
-            \item \textbf{includeDataPoints}
-            \item \textbf{from}
-            \item \textbf{to}
+            \item \code{groupByType} Per richiedere i dati aggregati per tipo di rifiuto.
+            \item \code{includeDataPoints} Per includere la lista dei singoli dati in una query con raggruppamento.
+            \item \code{from} Data di inizio
+            \item \code{to} Data di fine
         \end{itemize}
-    \item \textbf{Get /notifications } restituisce la lista delle notifiche di un determinato user.
-    \item \textbf{Patch /notifications/:notification } Permette di aggiornare lo stato della notifica a Read.
+    \item \code{Get /notifications } Restituisce la lista delle notifiche di un determinato account.
+    \item \code{Patch /notifications/:notification } Permette di aggiornare lo stato della notifica a Read.
 \end{itemize}
 
 \subsubsection{Autenticazione}
-Quando si crea un utente, la password viene criptata e salvata su DB. Quando viene richiesto l'autenticazione
-e i parametri (username e password) corrispondono ai parametri salvati su DB, viene restituito un token che permette l'accesso alla piattaforma:
+Il backend gestisce l'autenticazione ed i permessi degli utenti.
+Alla creazione di un account, la password viene criptata con algoritmo bcrypt e salvata su DB.
+Quando viene richiesta l'autenticazione e i parametri (username e password) corrispondono ai parametri salvati su DB,
+viene restituito un token JWT che permette l'accesso alla piattaforma. Esso contiene informazioni come id e permessi.
+Di seguito parte del codice volto alla gestione di permessi ed autenticazione:
 \begin{lstlisting}
 const JWT_SECRET = '12345' // just for demonstration
 const REQUEST_PROPERTY_DECODED_JWT = 'auth' // decoded JWT token gets inserted in request.auth
@@ -249,7 +255,7 @@ accountSchema.methods.toJSON = function() {
 module.exports = mongoose.model('Account', accountSchema)
 \end{lstlisting}
 
-\subsubsection{Waste}
+\subsubsection{Rifiuti}
 \begin{lstlisting}
 //Waste model
 const mongoose = require('mongoose')
@@ -350,7 +356,8 @@ module.exports = {
 }
 \end{lstlisting}
 
-\subsubsection{Notification}
+\subsubsection{Notifiche}
+Le notifiche vengono inserite automaticamente al momento del conferimento. Si presuppone che il frontend effettui polling.
 \begin{lstlisting}
 //Notification model
 const mongoose = require('mongoose')
@@ -399,9 +406,10 @@ module.exports = {
 \end{lstlisting}
 
 \subsection{Frontend}
-\subsubsection{Autentication}
-Viene fatto una richiesta al backend passado username e password. Quando si riceve il token dal backend si salva quest'ultimo
-in localStorage.
+Il frontend è costituito da un servizio web sviluppato con Node e React.
+\subsubsection{Autenticazione}
+L'autenticazione è delegata al backend attraverso l'apposita API di login.
+Ricevuto il token JWT, esso viene salvato in localStorage per memorizzare la sessione.
 \begin{lstlisting}
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -460,7 +468,7 @@ export default function useToken() {
 }
 \end{lstlisting}
 
-\subsubsection{Users Management}
+\subsubsection{Gestione account}
 \begin{lstlisting}
 //Get users list
 state = {
@@ -548,7 +556,7 @@ handleUserSaveChange() {
 }
 \end{lstlisting}
 
-\subsubsection{Chart}
+\subsubsection{Grafici}
 Per creare i grafici statistici, bisogna fare una query alla tabella dei rifiuti. Con i dati che riceviamo, tramite
 highcharts li visualizziamo.
 \begin{lstlisting}
@@ -727,95 +735,94 @@ TODO: descrivere migliorie
 
 
 \section{Deployment}
-%Rilascio, installazione e messa in funzione.
 Il progetto può essere scaricato con \code{git clone https://github.com/fedpet/aws-project.git} ed avviato con
 \code{docker compose up} nella sua cartella root. A questo punto basterà aprire localhost con un browser web per
 vederne l'interfaccia.
 
 \section{Dashboard}
-Riportiamo in seguito alcuni estratti delle due dashboard.
-La prima pagina che si apre quando proviamo ad accedere al frontend è quello di login.
-Quando si inserisce lo username e la password, verrà caricato una dashboard in base al role.
+Di seguito sono riportati alcuni estratti delle due dashboard.
+La prima pagina aperta all'accesso del frontend è la schermata di login raffigurata in \Cref{fig:login}.
+In seguito all'autenticazione viene mostrata una dashboard in base al ruolo dell'account (admin o utente), raffigurata
+rispettivamente in \Cref{fig:adminDashboard} e \Cref{fig:userDashboard}.
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/login.PNG}  \end{center}
-    \caption{MyWaste: login page}
-    \label{fig: login}
+    \caption{Schermata di login}
+    \label{fig:login}
 \end{figure}
 Qualora fossimo degli utenti standard avremo dunque:
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/userDashboard.PNG}  \end{center}
-    \caption{MyWaste: user dashboard}
-    \label{fig: userDashboard}
+    \caption{Dashboard utente}
+    \label{fig:userDashboard}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/userProfile.PNG}  \end{center}
-    \caption{MyWaste: user profile}
-    \label{fig: userProfile}
+    \caption{Schermata profilo utente}
+    \label{fig:userProfile}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/notificheConferimento.PNG}  \end{center}
-    \caption{MyWaste: notifiche conferimento}
-    \label{fig: notify}
+    \caption{Schermata delle notifiche dei conferimenti}
+    \label{fig:notify}
 \end{figure}
-Invece per gli utenti admin:
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/adminDashboard.PNG}  \end{center}
-    \caption{MyWaste admin: admin dashboard}
-    \label{fig: adminDashboard}
+    \caption{Dashboard amministratori}
+    \label{fig:adminDashboard}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/updateUserData.PNG}  \end{center}
-    \caption{MyWaste admin: user update}
-    \label{fig: userUpdate}
+    \caption{Schermata per l'aggiornamento delle informazioni degli utenti}
+    \label{fig:userUpdate}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/addNewUser.PNG}  \end{center}
     \caption{MyWaste admin: add new user}
-    \label{fig: addNewUser}
+    \label{fig:addNewUser}
 \end{figure}
 Alcune immagini della parte responsive:
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/login_responsive.PNG}  \end{center}
     \caption{MyWaste: Login responsive}
-    \label{fig: resplogin}
+    \label{fig:resplogin}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/userDashboard_resp1.PNG}  \end{center}
     \caption{MyWaste: User dashboard responsive}
-    \label{fig: respuserdash1}
+    \label{fig:respuserdash1}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/userDashboard_resp2.PNG}  \end{center}
     \caption{MyWaste: User dashboard responsive}
-    \label{fig: respuserdash2}
+    \label{fig:respuserdash2}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/adminDashboard_resp1.PNG}  \end{center}
     \caption{MyWaste: Admin dashboard responsive}
-    \label{fig: respadmindash1}
+    \label{fig:respadmindash1}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/adminDashboard_resp2.PNG}  \end{center}
     \caption{MyWaste: Admin dashboard responsive}
-    \label{fig: respadmindash2}
+    \label{fig:respadmindash2}
 \end{figure}
 \begin{figure}[h!]
     \begin{center}
         \includegraphics[width=1.0\textwidth]{images/adminDashboard_resp3.PNG}  \end{center}
     \caption{MyWaste: Admin dashboard responsive}
-    \label{fig: respadmindash3}
+    \label{fig:respadmindash3}
 \end{figure}
 
 
@@ -823,13 +830,12 @@ Alcune immagini della parte responsive:
 In conclusione pensiamo che questo progetto ci abbia aiutato a incrementare notevolmente la nostra conoscenza del mondo web
 e sopratutto aiutato a migliorare le nostre capacità di lavoro in team.
 Nonostante l'aspetto lavorativo ci abbia limitati a livello di tempo, siamo riusciti a strutturare il progetto in modo tale
-che ognuno potesse lavorare nel suo tempo libero senza la neccessità di dover coinvolgere continuamente gli altri menbri.
-Su questo aspetto l'uso di github ci ha dato un grossa mano. Abbiamo definito inizialmente una lista di issue da implementare.
-Da tale lista, ognuno poteva prendere in carico un issue, risolverlo e creare un pull request. Dopo aver creato la pull request,
-quest'ultimo prima di essere mergiato doveva essere revisionato da almeno uno dei menbri del team e tutti i test automatici
-dovevano dare esito positivo.
+che ognuno potesse lavorare nel suo tempo libero senza la neccessità di dover coinvolgere continuamente gli altri membri.
+Per questo aspetto l'utilizzo corretto di github è stato fondamentale.
+Abbiamo inizialmente suddiviso il progetto in una lista di task da implementare, inseriti su Github sottoforma di "issue".
+Da tale lista, ognuno poteva prendere in carico un task, risolverlo e creare un pull request.
+Ogni pull request richiedeva la revisione da parte di almeno un altro membro del team, nonchè l'esecuzione con successo
+di tutti i test automatici.
 
 
-%\bibliographystyle{plain}
-%\bibliography{references}
 \end{document}
