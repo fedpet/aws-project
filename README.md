@@ -5,3 +5,6 @@
 
 Architecture:
 ![Architecture](./documentation/arch.png)
+
+# Report
+![download report](https://github.com/fedpet/aws-project/raw/main/documentation/report.pdf)
