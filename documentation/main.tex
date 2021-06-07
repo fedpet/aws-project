@@ -9,6 +9,43 @@
 \usepackage{dirtree}
 \usepackage{xcolor}
 \usepackage[section]{placeins} % figures before next section
+\usepackage{listings}
+
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
 
 \definecolor{codegray}{gray}{0.925}
 \newcommand{\code}[1]{\colorbox{codegray}{\texttt{\detokenize{#1}}}}
@@ -103,9 +140,560 @@ Il progetto utilizza le seguenti tecnologie:
     \item Bootstrap - framework per CSS
 \end{itemize}
 
-%\section{Codice}
-%Solo aspetti rilevanti.
-%TODO: ????????????
+\section{Codice}
+\subsection{Backend code}
+\subsubsection{Api route}
+Per interagire con il backend bisogna effettuare le richieste alle API passando i parametri opportuni. Le api implementate sono:
+\begin{itemize}
+    \item \textbf{Post /api/login }restituisce un json contente username,name,role e token se i paramentri username e password passati
+    nella fase di request risultano corretti.
+    \item \textbf{Get /me }restituisce le informazioni dell'utente loggato. La richiesta deve essere fatto usando un token valido.
+    \item \textbf{Get /account } restituisce la lista degli utenti registrati nella piattaforma. Questa api, può essre chiamato solo dagli utenti admin.
+    \item \textbf{Post /account } Permette di creare un nuovo utente. Un utente può essere creato solo da un utente admin.
+    \item \textbf{Patch /account/:account } Permette di aggiornare le informazioni di un utente esistente. Può essere chiamato solo da un utente admin.
+    \item \textbf{Delete /account/:account } Permette ad un utente admin di cancellare un utente dalla piattaforma.
+    \item \textbf{Post /waste } Quando un bisogna viene svuotato, viene chiamato questa api per completare il conferimento.
+    \item \textbf{Get /waste} Permette di effettuare delle query sulla tabella dei conferimenti, usando opportuni paramentri quali:
+        \begin{itemize}
+            \item \textbf{groupByType}
+            \item \textbf{includeDataPoints}
+            \item \textbf{from}
+            \item \textbf{to}
+        \end{itemize}
+    \item \textbf{Get /notifications } restituisce la lista delle notifiche di un determinato user.
+    \item \textbf{Patch /notifications/:notification } Permette di aggiornare lo stato della notifica a Read.
+\end{itemize}
+
+\subsubsection{Autenticazione}
+Quando si crea un utente, la password viene criptata e salvata su DB. Quando viene richiesto l'autenticazione
+e i parametri (username e password) corrispondono ai parametri salvati su DB, viene restituito un token che permette l'accesso alla piattaforma:
+\begin{lstlisting}
+const JWT_SECRET = '12345' // just for demonstration
+const REQUEST_PROPERTY_DECODED_JWT = 'auth' // decoded JWT token gets inserted in request.auth
+
+const jwt = require('jsonwebtoken')
+// JWT decoding middleware
+const auth = require('express-jwt')({ // JWT decoding middleware
+    secret: JWT_SECRET,
+    algorithms: ['HS256'],
+    credentialsRequired: true,
+    requestProperty: REQUEST_PROPERTY_DECODED_JWT
+})
+const guard = require('express-jwt-permissions')({
+    requestProperty: REQUEST_PROPERTY_DECODED_JWT,
+    permissionsProperty: 'role' // permissions are stored in the role field of the JWT token
+})
+//Generate token for user
+module.exports = {
+    auth: auth,
+    guard: guard,
+    createToken(account) {
+        return jwt.sign({id: account._id, role:account.role}, JWT_SECRET)
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+//Account model
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+const { Schema } = mongoose
+
+const accountSchema = new Schema({
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        default: 'user'
+    },
+    name: {
+        type: String,
+        required: true
+    }
+})
+
+accountSchema.pre('save', function(next) {
+    if (!this.isModified('password')) {
+        return next()
+    }
+    bcrypt.genSalt(2, (error, salt) => {
+        if (error) {
+            return next(error)
+        }
+        bcrypt.hash(this.password, salt, (error, hash) => {
+            if (error) {
+                return next(error)
+            }
+            this.password = hash
+            next()
+        })
+    })
+})
+
+accountSchema.methods.toJSON = function() {
+    var obj = this.toObject()
+    delete obj.password
+    obj.id = obj._id
+    delete obj._id
+    delete obj.__v
+    return obj
+}
+
+module.exports = mongoose.model('Account', accountSchema)
+\end{lstlisting}
+
+\subsubsection{Waste}
+\begin{lstlisting}
+//Waste model
+const mongoose = require('mongoose')
+const { Schema } = mongoose
+
+const schema = new Schema({
+    account: { type: Schema.Types.ObjectId, required: true, ref: 'Account' },
+    type: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    date: { type: Date, default: Date.now, required: true, index: true }
+})
+schema.index({account: 1, date: -1}) // ascending accounts, descending dates
+
+module.exports = mongoose.model('Waste', schema, 'waste')
+\end{lstlisting}
+
+\begin{lstlisting}
+//Waste controller
+module.exports = {
+    delivery(req, res, next) {
+        Account.findById(req.body.account).exec()
+            .then( acct => {
+                let data = {
+                    account: acct.id,
+                    quantity: req.body.quantity,
+                    type: req.body.type
+                }
+                if (req.body.date) {
+                    data.date = new Date(req.body.date)
+                }
+                return new Waste(data).save()
+            })
+            .then(
+                waste => {
+                    new Notification({
+                        account: waste.account,
+                        date: waste.date,
+                        message:`Delivered ${waste.quantity} Kg of ${waste.type}`
+                    }).save()
+                    res.status(201).json(waste)
+                },
+                err => next(err)
+            )
+    },
+    query(req, res, next) {
+        let q = null
+        if (req.query.groupByType) {
+            const pipeline = [
+                {
+                    $group: {
+                        _id: "$type",
+                        total: {$sum: "$quantity"}
+                    }
+                }, {
+                    $project: {
+                        _id: 0,
+                        type: "$_id",
+                        total: 1
+                    }
+                }
+            ]
+            if(req.query.includeDataPoints) {
+                pipeline[0].$group.data = { $push:  { date: "$date", quantity: "$quantity" } }
+                pipeline[1].$project.data = 1
+            }
+            let match = { }
+            if (req.query.account) {
+                match.account = ObjectId(req.query.account)
+            }
+            if (req.query.from) {
+                match.date = { $gte: new Date(req.query.from) }
+            }
+            if (req.query.to) {
+                match.date = match.date || {}
+                match.date.$lte = new Date(req.query.to)
+            }
+            if(Object.keys(match).length > 0) {
+                pipeline.unshift({ $match: match })
+            }
+            q = Waste.aggregate(pipeline)
+        } else {
+            q = Waste.find()
+            if (req.query.account) {
+                q.where('account', ObjectId(req.query.account))
+            }
+            if (req.query.from) {
+                q.where('date').gte(new Date(req.query.from))
+            }
+            if (req.query.to) {
+                q.where('date').lte(new Date(req.query.to))
+            }
+        }
+        q.then(
+            result => res.status(200).json(result),
+            err => next(err)
+        )
+    }
+}
+\end{lstlisting}
+
+\subsubsection{Notification}
+\begin{lstlisting}
+//Notification model
+const mongoose = require('mongoose')
+const { Schema } = mongoose
+
+const notificationSchema = new Schema({
+    read: {
+        type: Boolean,
+        default: false
+    },
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    message: {
+        type: String,
+        required: true
+    },
+    account: { type: Schema.Types.ObjectId, required: true, ref: 'Account' },
+})
+
+module.exports = mongoose.model('Notification', notificationSchema)
+\end{lstlisting}
+
+\begin{lstlisting}
+//Notifications controller
+const Notification = require('../models/notification')
+
+module.exports = {
+    query(req, res, next) {
+        let q = Notification.find({account: req.auth.id})
+        if (req.query.from) {
+            q.where('date').gte(new Date(req.query.from))
+        }
+        if (req.query.to) {
+            q.where('date').lte(new Date(req.query.to))
+        }
+        q.sort({date:'descending'})
+        q.exec().then(notifications => res.status(200).json(notifications), next)
+    },
+    markAsRead(req, res, next) {
+        Notification.findByIdAndUpdate(req.params.notification, req.body, {new:true})
+            .then(n => res.json(n), next)
+    }
+}
+\end{lstlisting}
+
+\subsection{Frontend}
+\subsubsection{Autentication}
+Viene fatto una richiesta al backend passado username e password. Quando si riceve il token dal backend si salva quest'ultimo
+in localStorage.
+\begin{lstlisting}
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+
+async function loginUser(credentials) {
+    return fetch('/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(credentials)
+    }).then(
+        data => data.json()
+    )
+}
+
+export default function Login({setToken}) {
+
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [errorMessage, setErrorMessage] = useState();
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+        const token = await loginUser({
+            email,
+            password
+        });
+        if(token) {
+            setErrorMessage('Authentication error. Incorrect username or password.')
+        }
+        setToken(token);
+    }
+    return(...)
+}
+
+
+export default function useToken() {
+  const getToken = () => {
+    const tokenString = localStorage.getItem('token');
+    const userToken = JSON.parse(tokenString);
+    return userToken?.token
+  };
+
+  const [token, setToken] = useState(getToken());
+
+  const saveToken = userToken => {
+    localStorage.setItem('token', JSON.stringify(userToken));
+    setToken(userToken.token);
+  };
+
+  return {
+    setToken: saveToken,
+    token
+  }
+}
+\end{lstlisting}
+
+\subsubsection{Users Management}
+\begin{lstlisting}
+//Get users list
+state = {
+	users: []
+}
+
+getUserList() {
+	fetch("/api/account", {
+		method: 'GET',
+		withCredentials: true,
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
+		}
+	})
+	.then(response => response.json())
+	.then(json => {
+		this.setState({users: json})
+	}).catch((error) => {
+	  alert("some error: " + error);
+   });
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+//Add user
+handleAddUser() {
+	if(this.state.user.length < 4) {
+		alert("All fields are required!")
+		return;
+	}
+	fetch("/api/account/", {
+		method: 'POST',
+		withCredentials: true,
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(this.state.user)
+	}).then((response) =>  {
+		if(response.ok) {
+			this.getUserList();
+			<Redirect to="/admin" />;
+		}
+	})
+}
+\end{lstlisting}
+\begin{lstlisting}
+//Delete user
+handleDelete() {
+	fetch("/api/account/" +this.state.modalInfo.id, {
+		method: 'DELETE',
+		withCredentials: true,
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
+		}
+	}).then((response) =>  {
+		if(response.ok) {
+			this.getUserList();
+			<Redirect to="/admin" />;
+		}
+	});
+}
+\end{lstlisting}
+\begin{lstlisting}
+//Update user data
+handleUserSaveChange() {
+	fetch("/api/account/" +this.state.modalInfo.id, {
+		method: 'PATCH',
+		withCredentials: true,
+		credentials: 'include',
+		headers: {
+			'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token ,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(this.state.user)
+	}).then((response) =>  {
+		if(response.ok) {
+			this.getUserList();
+			<Redirect to="/admin" />;
+		}
+	})
+}
+\end{lstlisting}
+
+\subsubsection{Chart}
+Per creare i grafici statistici, bisogna fare una query alla tabella dei rifiuti. Con i dati che riceviamo, tramite
+highcharts li visualizziamo.
+\begin{lstlisting}
+state = {
+	chartData: []
+}
+componentDidMount(event,picker) {
+   fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment().subtract(60, 'days').format('YYYY-MM-DD')+"&to="+moment().add(1,'days').format('YYYY-MM-DD'))
+   .then(response => response.json())
+   .then(json => {
+	   this.setState({chartData: json})
+   });
+}
+
+handleFilterChartsByDate(event, picker) {
+   fetch("/api/waste?groupByType=true&includeDataPoints=true&from="+moment(picker.startDate).format('YYYY-MM-DD')+"&to="+moment(picker.endDate).format('YYYY-MM-DD'))
+   .then(response => response.json())
+   .then(json => {
+	   this.setState({chartData: json})
+   });
+}
+\end{lstlisting}
+Per la gestione del grafico lato utente standard, c'è stato la neccessità di far in modo che più componenti si passero le informazioni,
+in quanto viene aggiornato il campo costo e i grafici del mese selezionato.
+\begin{lstlisting}
+class CostCalculator extends Component {
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      startDate: new Date(),
+      totalCost: ''
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(date) {
+    this.setState({
+      startDate: date
+    })
+  }
+
+  componentDidMount() {
+    this.calculateCost();
+    this.handleChartUpdate();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.startDate !== this.state.startDate) {
+        this.calculateCost();
+        this.handleChartUpdate();
+    }
+  }
+
+  getPickerDate() {
+     return this.state.startDate
+  }
+
+    handleChartUpdate() {
+       var accountId = JSON.parse(localStorage.getItem('token')).id;
+       var month = this.state.startDate.getMonth();
+       var year = this.state.startDate.getFullYear();
+       var from = moment(new Date(year, month, 1)).format('YYYY-MM-DD');
+       var to = moment(new Date(year, month + 1, 0)).format('YYYY-MM-DD');
+       fetch("/api/waste?account="+accountId+"&groupByType=true&includeDataPoints=true&from="+from+"&to="+to)
+       .then(response => response.json())
+       .then(json => {
+           this.props.makeUpdateChartData(json)
+       });
+    }
+
+
+   calculateCost() {
+       var month = this.state.startDate.getMonth() + 1;
+       var year = this.state.startDate.getFullYear();
+       var accountId = JSON.parse(localStorage.getItem('token')).id;
+
+      fetch("/api/account/" +accountId + "/cost?month="+month+"&year="+year, {
+           method: 'GET',
+           withCredentials: true,
+           credentials: 'include',
+           headers: {
+               'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token')).token,
+               'Content-Type': 'application/json'
+           }
+       })
+      .then(response => response.json())
+      .then(json => {
+          this.setState({totalCost: json.cost + " " + json.currency });
+      });
+   }
+  render {
+    return(...)
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+class Statistics extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            chartData: []
+        }
+        this.updateChartData = this.updateChartData.bind(this);
+    }
+
+    updateChartData(data) {
+        this.setState({chartData: data})
+    }
+
+    UNSAFE_componentWillReceiveProps(props) {
+        if(this.state.chartData !== props.receiveChartData) {
+            this.setState({chartData: props.receiveChartData})
+        }
+    }
+	render {
+		return(...)
+	}
+}
+\end{lstlisting}
+
+\begin{lstlisting}
+class Dashboard extends Component {
+	constructor(props){
+		super(props);
+		this.state={
+			chartData: []
+		}
+	}
+
+	updateChartData(data) {
+		this.setState({ chartData: data});
+	}
+
+	render() {
+		return (
+		  <div>
+		    <CostCalculator makeUpdateChartData= {this.updateChartData.bind(this)}/>
+		    <Statistics receiveChartData={this.state.chartData} />
+		  </div>
+		 )
+	}
+}
+\end{lstlisting}
 
 \section{Test}
 \subsection{Codice}
@@ -193,7 +781,6 @@ Invece per gli utenti admin:
     \label{fig: addNewUser}
 \end{figure}
 
-%TODO: rilascio di immagini docker senza clonare la repo
 \section{Conclusioni}
 In conclusione pensiamo che questo progetto ci abbia aiutato a incrementare notevolmente la nostra conoscenza del mondo web
 e sopratutto aiutato a migliorare le nostre capacità di lavoro in team.
