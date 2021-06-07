@@ -67,25 +67,26 @@ class CostCalculator extends Component {
        })
       .then(response => response.json())
       .then(json => {
-          this.setState({totalCost: json.cost + " " + json.currency });
+          this.setState({totalCost: json.cost });
       });
    }
 
     render () {
         return(
         <div className="container">
-          <div className="row">
+          <div className="row d-flex justify-content-center text-center  align-items-center">
             <div className="col">
-                <DatePicker
-                  selected={this.state.startDate}
-                  dateFormat="MM/yyyy"
-                  showMonthYearPicker
-                  onChange = {this.handleChange}
-                />
+                    <DatePicker
+                      className="form-control"
+                      selected={this.state.startDate}
+                      dateFormat="MM/yyyy"
+                      showMonthYearPicker
+                      onChange = {this.handleChange}
+                    />
             </div>
             <div className="col">
-                <div className="form-group">
-                    <input className="form-control" type="text" value={this.state.totalCost} placeholder="Total cost" readOnly />
+                <div>
+                  <p className="totalCost"><span>Total cost: </span>{this.state.totalCost}&euro;</p>
                </div>
             </div>
           </div>
