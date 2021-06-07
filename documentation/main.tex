@@ -732,98 +732,10 @@ sono stati effettuati Usability Tests con 5 potenziali veri utenti. Ad ognuno di
 sopracitati senza però essere messi al corrente degli step intermedi. In questo modo è stato possibile osservare quanto fosse
 intuitiva l'interfaccia ed apportare migliorie.
 
-
 \section{Deployment}
 Il progetto può essere scaricato con \code{git clone https://github.com/fedpet/aws-project.git} ed avviato con
 \code{docker compose up} nella sua cartella root. A questo punto basterà aprire localhost con un browser web per
 vederne l'interfaccia.
-
-\section{Dashboard}
-Di seguito sono riportati alcuni estratti delle due dashboard.
-La prima pagina aperta all'accesso del frontend è la schermata di login raffigurata in \Cref{fig:login}.
-In seguito all'autenticazione viene mostrata una dashboard in base al ruolo dell'account (admin o utente), raffigurata
-rispettivamente in \Cref{fig:adminDashboard} e \Cref{fig:userDashboard}.
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/login.PNG}  \end{center}
-    \caption{Schermata di login}
-    \label{fig:login}
-\end{figure}
-Qualora fossimo degli utenti standard avremo dunque:
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/userDashboard.PNG}  \end{center}
-    \caption{Dashboard utente}
-    \label{fig:userDashboard}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/userProfile.PNG}  \end{center}
-    \caption{Schermata profilo utente}
-    \label{fig:userProfile}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/notificheConferimento.PNG}  \end{center}
-    \caption{Schermata delle notifiche dei conferimenti}
-    \label{fig:notify}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/adminDashboard.PNG}  \end{center}
-    \caption{Dashboard amministratori}
-    \label{fig:adminDashboard}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/updateUserData.PNG}  \end{center}
-    \caption{Schermata per l'aggiornamento delle informazioni degli utenti}
-    \label{fig:userUpdate}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/addNewUser.PNG}  \end{center}
-    \caption{MyWaste admin: add new user}
-    \label{fig:addNewUser}
-\end{figure}
-Alcune immagini della parte responsive:
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/login_responsive.PNG}  \end{center}
-    \caption{MyWaste: Login responsive}
-    \label{fig:resplogin}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/userDashboard_resp1.PNG}  \end{center}
-    \caption{MyWaste: User dashboard responsive}
-    \label{fig:respuserdash1}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/userDashboard_resp2.PNG}  \end{center}
-    \caption{MyWaste: User dashboard responsive}
-    \label{fig:respuserdash2}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/adminDashboard_resp1.PNG}  \end{center}
-    \caption{MyWaste: Admin dashboard responsive}
-    \label{fig:respadmindash1}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/adminDashboard_resp2.PNG}  \end{center}
-    \caption{MyWaste: Admin dashboard responsive}
-    \label{fig:respadmindash2}
-\end{figure}
-\begin{figure}[h!]
-    \begin{center}
-        \includegraphics[width=1.0\textwidth]{images/adminDashboard_resp3.PNG}  \end{center}
-    \caption{MyWaste: Admin dashboard responsive}
-    \label{fig:respadmindash3}
-\end{figure}
-
 
 \section{Conclusioni}
 In conclusione pensiamo che questo progetto ci abbia aiutato a incrementare notevolmente la nostra conoscenza del mondo web
@@ -835,6 +747,4 @@ Abbiamo inizialmente suddiviso il progetto in una lista di task da implementare,
 Da tale lista, ognuno poteva prendere in carico un task, risolverlo e creare un pull request.
 Ogni pull request richiedeva la revisione da parte di almeno un altro membro del team, nonchè l'esecuzione con successo
 di tutti i test automatici.
-
-
 \end{document}
